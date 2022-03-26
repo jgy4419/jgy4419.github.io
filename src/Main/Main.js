@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './Main.scss'
 import {Link, Route, Switch} from 'react-router-dom'
+// json 서버 열기 => npx json-server ./test.json --watch --port 8800
 function Main(){
     useEffect(() => {
         pageLoding();

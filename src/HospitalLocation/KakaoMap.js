@@ -90,15 +90,17 @@ function KakaoMap(){
         var markerPosition  = new kakao.maps.LatLng(latitude, longitude),
             markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption); 
         
-
         // 전체 병원 위치 좌표 찍어주기.
         axios.get('http://localhost:8800/hospital')
         .then(res => {
             // 마커 이미지의 이미지 주소입니다
             var imageSrc = "https://st2.depositphotos.com/1561359/12005/v/600/depositphotos_120054088-stock-illustration-hospital-icon-sign.jpg"; 
-                
+            for(var i = 0; i < res.data.length; i++){
+                console.log('bb', res.data[i].name);
+            }
             res.data.map(i => {
                 var imageSize = new kakao.maps.Size(24, 35); 
+                console.log('i는' + i.name);
                 
                 // 마커 이미지를 생성합니다    
                 var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
@@ -106,15 +108,35 @@ function KakaoMap(){
                 // 마커를 생성합니다
                 var marker = new kakao.maps.Marker({
                     map: map, // 마커를 표시할 지도
+                    content: `<div>${i.title}</div>`,
                     position: new kakao.maps.LatLng(i.xAxis, i.yAxis), // 마커를 표시할 위치 // 마커.. 여러개 띄우게 하기..
                     title : i.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
                     image : markerImage // 마커 이미지 
                 });
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: `<div>${i.name}</div>` // 인포윈도우에 표시할 내용
+                });
+                kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
+                kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
             })
-        })
-
-        // 여기까지
-
+        });
+        function makeOverListener(map, marker, infowindow) {
+            return function() {
+                infowindow.open(map, marker);
+            };
+        }
+        
+        // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
+        function makeOutListener(infowindow) {
+            return function() {
+                infowindow.close();
+            };
+        }
+        // for(let i = 0; i < res.data.length; i++){
+        //     let infoWindow = new kakao.maps.InfoWindow({
+        //         content: 
+        //     })
+        // }
         let customOverlay = new kakao.maps.CustomOverlay({
             map: map,
             position: markerPosition,

@@ -1,5 +1,4 @@
 /* global kakao */
-
 import React, {useState, useEffect} from 'react';
 import { Link, Route } from 'react-router-dom';
 import './HospitalLocation.scss'
@@ -69,7 +68,7 @@ function HospitalLocation(){
                 </div>
                 <hr className="line"/>
                 <div>
-                <p>{inputValue}</p>
+                {/* <p>{inputValue}</p> */}
                 </div>
                 <div className="list">
                     <div>
