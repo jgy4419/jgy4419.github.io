@@ -24,6 +24,7 @@ function KakaoMap(){
     }
 
     useEffect(async () => {
+            
         // 처음에 지도 표시해주기.
         mapContainer = document.getElementById('map'); // 지도를 표시할 div 
         mapOption = { 
@@ -114,11 +115,16 @@ function KakaoMap(){
                     image : markerImage // 마커 이미지 
                 });
                 var infowindow = new kakao.maps.InfoWindow({
-                    content: `<div>${i.name}</div>` // 인포윈도우에 표시할 내용
+                    content: `<div class="hospitalName">
+                                이름 : ${i.name} <br/>
+                                전화번호 : ${i.tel}
+                            </div>` // 인포윈도우에 표시할 내용
                 });
                 kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
                 kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
             })
+            .catch(err => {console.log(err)})
+            
         });
         function makeOverListener(map, marker, infowindow) {
             return function() {

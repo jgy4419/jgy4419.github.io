@@ -18,19 +18,16 @@ function HospitalLocation(){
     let [searchText, setSearchText] = useState('');
     
     useEffect(()=>{
-        // var is_action = false;
-        // axios.get('http://localhost:8800/hospital')
-        // .then(res => {
-        //     for(let i = 0; i < res.data.length; i++){
-        //         if(inputValue === ''){
-        //             setA([...res.data]);
-        //         }
-        //     }
-        // }).catch(err => {
-        //     console.log(err)
-        // })
-        // is_action = true;
-    })
+        // 처음에는 전체 리스트 보이도록 해주기.
+        axios.get('http://localhost:8800/hospital')
+        .then(res => {
+            for(let i = 0; i < res.data.length; i++){
+                setA([...res.data]);
+            }
+        }).catch((err) => {
+            console.log('에러');
+        })
+    }, [])
     function searchData(){
         axios.get('http://localhost:8800/hospital')
         .then(res => {
@@ -49,12 +46,19 @@ function HospitalLocation(){
             console.log('에러');
         })
     }
+    // enter 키 이벤트 (enter키를 누르면 검색이 실행된다.)
+    const onkeyPress = e => {
+        if(e.key == 'Enter'){
+            searchData();
+        }
+    }
     return(
         <main>
             <div className="inner">
                 <div className="searchBox">
                     <div className="searchBox">
                         <input className="search" placeholder="Search" type="text"
+                        onKeyPress={onkeyPress}
                         onChange={onChange}/>
                         {/* 만약 검색 내용을 입력 후 검색버튼을 누르면 / DB내의 데이터들과 검색어와 동일한 값을 전송 */}
                         <button className="btn" 

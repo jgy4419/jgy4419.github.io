@@ -4,6 +4,9 @@ import test from '../data/test.json'
 import axios from 'axios';
 
 function HospitalInformation(props){
+    const [data, setData] = useState([]);
+    const [initName, setInitName] = useState([]);
+    const [initTel, setInitTel] = useState([]);
     return(
         <div className="container">
             <ul>
