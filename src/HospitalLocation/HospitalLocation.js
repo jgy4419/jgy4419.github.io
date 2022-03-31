@@ -23,16 +23,21 @@ function HospitalLocation(){
         .then(res => {
             for(let i = 0; i < res.data.length; i++){
                 setA([...res.data]);
+                
             }
         }).catch((err) => {
             console.log('에러');
         })
     }, [])
     function searchData(){
+        // 정규
+        // let searchRegex = new RegExp(inputValue, "g");
         axios.get('http://localhost:8800/hospital')
         .then(res => {
             for(let i = 0; i < res.data.length; i++){
                 // 만약 json데이터 안에 name 중 input이랑 같은 값이 있으면
+                // inputValue.match(`/${inputValue}/g`);
+
                 if(res.data[i].name === inputValue){
                     const filterData = res.data.filter(data => data.name === inputValue);
                     setA([filterData[0]]);

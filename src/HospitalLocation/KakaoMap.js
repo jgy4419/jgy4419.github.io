@@ -5,9 +5,14 @@ import React, {useState, useEffect, Component} from 'react';
 import Spinner from '../Spinner';
 import './KakaoMap.scss'
 
+import {connect, useSelector, useDispatch} from 'react-redux';
+
 const { kakao } = window;
 
 function KakaoMap(){
+    let state = useSelector(state => state);
+    let dispatch = useDispatch();
+
     // 페이지가 로딩되면 카카오 지도 띄우도록 설정.
     let latitude = 0;
     let longitude = 0;
@@ -24,16 +29,30 @@ function KakaoMap(){
     }
 
     useEffect(async () => {
-            
         // 처음에 지도 표시해주기.
         mapContainer = document.getElementById('map'); // 지도를 표시할 div 
         mapOption = { 
             // 충주 중심좌표
-            // center: new kakao.maps.LatLng(36.99196502823086, 127.92563283606664),
-            center: new kakao.maps.LatLng(36.96908528922564, 127.87264184466144),
+            center: new kakao.maps.LatLng(36.99196502823086, 127.92563283606664),
             level: 7 // 지도의 확대 레벨
         };
-
+        let testBtn = document.querySelector('.testBtn');
+        function panTo() {
+            // 이동할 위도 경도 위치를 생성합니다 
+            var moveLatLon = new kakao.maps.LatLng(state[0].clickLocationsX, state[0].clickLocationsY);
+                
+            // 지도 중심을 부드럽게 이동시킵니다
+            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+            map.panTo(moveLatLon);             
+        }       
+        // /////////////////////////////
+        // 테스트라는 변수에 함수를 보냄
+        // dispatch({type: '테스트', payload: {func: panTo()}});
+        ////////////////////////////////
+        
+        testBtn.addEventListener('click', function(){
+            panTo();
+        })
         // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
         map = new kakao.maps.Map(mapContainer, mapOption);
         // 위치 찾기 버튼을 누르면 spinner 생성.
@@ -44,8 +63,10 @@ function KakaoMap(){
                 navigator.geolocation.getCurrentPosition(function(position){
                     latitude = position.coords.latitude;
                     longitude = position.coords.longitude;
+                    // 내위치를 지정.
+                    dispatch({type: '내위치', payload: {x: latitude, y: longitude}});
                     // 위치를 찾으면 카카오맵의 위치를 현재위치로 재설정해서 재로딩 시켜줌.
-                    resolve(mapReset(latitude, longitude));
+                    resolve(mapReset(state[0].clickLocationsX, state[0].clickLocationsY));
                 }, function(error){
                     console.log(error);
                 }, {
@@ -64,12 +85,13 @@ function KakaoMap(){
     function reload(){
         window.location.reload();
     }
+
     // 내 위치 찾아주는 함수
     function mapReset(latitude, longitude){
         // 화면이 띄워지면 spinner 제거.
         spinnerChange(false);
         mapOption = { 
-            center: new kakao.maps.LatLng(latitude, longitude), // 지도의 중심좌표
+            center: new kakao.maps.LatLng(state[0].clickLocationsX, state[0].clickLocationsY), // 지도의 중심좌표
             level: 3 // 지도의 확대 레벨
         };
         map = new kakao.maps.Map(mapContainer, mapOption);   
@@ -138,11 +160,6 @@ function KakaoMap(){
                 infowindow.close();
             };
         }
-        // for(let i = 0; i < res.data.length; i++){
-        //     let infoWindow = new kakao.maps.InfoWindow({
-        //         content: 
-        //     })
-        // }
         let customOverlay = new kakao.maps.CustomOverlay({
             map: map,
             position: markerPosition,
@@ -161,6 +178,7 @@ function KakaoMap(){
                 <button onClick={
                     reload
                 }>내 위치</button>
+                <button className="testBtn">aa</button>
             </div>
         </div>
     )
