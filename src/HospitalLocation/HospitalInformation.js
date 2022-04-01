@@ -12,6 +12,9 @@ function HospitalInformation(props){
     let clickLocationX = '';
     let clickLocationY = '';
 
+    // 리스트 상태.
+    let [listState, setListState] = useState(0);
+
     let state = useSelector(state => state);
     let dispatch = useDispatch();
     function locationSend(e){
@@ -26,12 +29,12 @@ function HospitalInformation(props){
                     // 그 병원의 좌표 값을 가져옴.
                     clickLocationX = res.data[i].xAxis;
                     clickLocationY = res.data[i].yAxis;
-                    dispatch({type: '좌표변경', payload: {x: res.data[i].xAxis, y: res.data[i].yAxis}});
+                    dispatch({type: '좌표변경', payload: {x: res.data[i].xAxis, y: res.data[i].yAxis, hospitalNames: res.data[i].name}});
+                    console.log('병원이름' ,state[0].hospitalName);
                 }
             }
-            
-            console.log(state[0].clickLocationsX)
-            console.log(state[0].clickLocationsY)
+            dispatch({type: '테스트', payload: {test: e.target.innerText}})
+            console.log('aaa',e.target.innerText)
         })
     }
     return(
@@ -43,7 +46,7 @@ function HospitalInformation(props){
                             // 리스트를 클릭하면 클릭한 병원의 좌표를 kakaoMap 한테 보내줘야됨.
                             <div className="list" onClick={locationSend}>
                                 {/* <div>{props.searchText}</div> */}
-                                <p className = "name" >{i.name}</p>
+                                <p className = "name">{i.name}</p>
                                 <p className = "tel">{i.tel}</p>
                                 <hr/>
                             </div>

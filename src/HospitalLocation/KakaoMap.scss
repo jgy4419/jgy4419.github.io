@@ -5,19 +5,24 @@
     z-index: 1;
     border-radius: 10px;
     border: 5px solid rgb(216, 216, 216);
-    button{
+    .btn{
         position: absolute;
         cursor: pointer;
         bottom: 0;
         right: 0;
         z-index: 10;
-        width: 75px;
-        height: 35px;
-        font-size: 15px;
-        font-weight: 700;
-        border-radius: 10px;
-        border: 0;
-        background-color:antiquewhite;
+        button{
+            width: 75px;
+            height: 35px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 10px;
+            border: 0;
+            background-color:antiquewhite;
+        }
+        button:nth-child(2){
+            font-size: 10px;
+        }
     }
     .hospitalName{
         padding: 10px;

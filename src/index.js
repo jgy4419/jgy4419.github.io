@@ -13,12 +13,13 @@ import {Provider} from 'react-redux'
 import { createStore } from 'redux';
 
 let defaultState = [
-  {clickLocationsX: 0, clickLocationsY: 0, myLocationX: 0, myLocationY: 0, locationChange: ''}
+  {clickLocationsX: 0, clickLocationsY: 0, myLocationX: 0, myLocationY: 0, hospitalName: ''}
 ]
 
 function reducer(state = defaultState, action){
   let copy = [...state];
   if(action.type === '좌표변경'){
+    // copy[0].hospitalName = action.payload.hospitalNames
     copy[0].clickLocationsX = action.payload.x;
     copy[0].clickLocationsY = action.payload.y;
     return copy;
@@ -26,7 +27,7 @@ function reducer(state = defaultState, action){
     copy[0].clickLocationsX = action.payload.x;
     copy[0].clickLocationsY = action.payload.y;
   }else if(action.type === '테스트'){
-    copy[0].locationChange = action.payload.func;
+    copy[0].hospitalNames = action.payload.test;
   }else{
     return state;
   }

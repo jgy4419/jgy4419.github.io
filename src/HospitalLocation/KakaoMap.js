@@ -175,10 +175,12 @@ function KakaoMap(){
                     ? (<Spinner/>)
                     : null
                 }
-                <button onClick={
-                    reload
-                }>내 위치</button>
-                <button className="testBtn">aa</button>
+                <div className="btn">
+                    <button onClick={
+                        reload
+                    }>내 위치</button>
+                    <button className="testBtn">병원찾기</button>
+                </div>
             </div>
         </div>
     )
