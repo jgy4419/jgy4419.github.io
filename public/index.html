@@ -18,6 +18,7 @@
     -->
 
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -29,10 +30,12 @@
     -->
     <title>React App</title>
   </head>
+  
   <body>
     <div id="root"></div>
     <!-- 카카오맵 띄우기 -->
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3d028c2af07fc66b369d517788228a63"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3d028c2af07fc66b369d517788228a63&libraries=services"></script>
+    <script type="text/javascript" src="http://dapi.kakao.com/v2/maps/sdk.js?autoload=false"></script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

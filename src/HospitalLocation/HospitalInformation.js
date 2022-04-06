@@ -18,7 +18,16 @@ function HospitalInformation(props){
     let state = useSelector(state => state);
     let dispatch = useDispatch();
     function locationSend(e){
-        // 리스트를 클릭하면 동작하는 함수. 
+        // 리스트 내의 item을 클릭하면, 테두리 변경.(다른 요소 클릭하면 그려진 테두리가 없어지도록 하기)
+        const listBox = document.querySelectorAll('.list');
+        for(let i = 0; i < listBox.length; i++){
+            listBox[i].classList.toggle('event');
+            // 버튼 하나를 클릭해서 event가 생기면 다른 버튼들은 event 클래스가 없어져야 된다.
+            listBox[i].addEventListener('click', function(){
+                listBox[i].classList.toggle('event');
+            });
+        }
+        // console.log('a', listBox.length);
         console.log(e.target.innerText);
         // console.log(props.data.);
         axios.get('http://localhost:8800/hospital')
@@ -46,9 +55,11 @@ function HospitalInformation(props){
                             // 리스트를 클릭하면 클릭한 병원의 좌표를 kakaoMap 한테 보내줘야됨.
                             <div className="list" onClick={locationSend}>
                                 {/* <div>{props.searchText}</div> */}
-                                <p className = "name">{i.name}</p>
-                                <p className = "tel">{i.tel}</p>
-                                <hr/>
+                                <div>
+                                    <p className = "name">{i.name}</p>
+                                    <p className = "tel">{i.tel}</p>
+                                </div>
+                                {/* <hr/> */}
                             </div>
                         )
                     })
