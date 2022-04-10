@@ -95,7 +95,7 @@ function HospitalLocation(){
                     {/* input 값을 props로 보내기. */}
                     <HospitalInformation searchText={searchText} data={a}/>
                 </section>
-                <button>
+                <button className='backBtn'>
                     <Link to="/">
                         뒤로가기
                     </Link>

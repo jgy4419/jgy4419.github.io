@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, {useState, useEffect} from 'react';
 import './HospitalInformation.scss'
 import test from '../data/test.json'
@@ -19,14 +21,14 @@ function HospitalInformation(props){
     let dispatch = useDispatch();
     function locationSend(e){
         // 리스트 내의 item을 클릭하면, 테두리 변경.(다른 요소 클릭하면 그려진 테두리가 없어지도록 하기)
-        const listBox = document.querySelectorAll('.list');
-        for(let i = 0; i < listBox.length; i++){
-            listBox[i].classList.toggle('event');
-            // 버튼 하나를 클릭해서 event가 생기면 다른 버튼들은 event 클래스가 없어져야 된다.
-            listBox[i].addEventListener('click', function(){
-                listBox[i].classList.toggle('event');
-            });
-        }
+        // const listBox = document.querySelectorAll('.list');
+        // for(let i = 0; i < listBox.length; i++){
+        //     listBox[i].classList.toggle('event');
+        //     // 버튼 하나를 클릭해서 event가 생기면 다른 버튼들은 event 클래스가 없어져야 된다.
+        //     listBox[i].addEventListener('click', function(){
+        //         listBox[i].classList.toggle('event');
+        //     });
+        // }
         // console.log('a', listBox.length);
         console.log(e.target.innerText);
         // console.log(props.data.);

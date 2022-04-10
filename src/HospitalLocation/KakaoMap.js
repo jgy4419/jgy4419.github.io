@@ -243,10 +243,10 @@ function KakaoMap(){
                     }>내 위치</button>
                     <button className="testBtn">병원 찾기</button>
                 </div>
-            </div>
-            <div className="hAddr">
-                    <span className="title">지도중심기준 행정동 주소정보</span>
+                <div className="hAddr">
+                    <span className="title">지도중심기준 주소정보 : </span>
                     <span id="centerAddr"></span>
+                </div>
             </div>
         </div>
     )

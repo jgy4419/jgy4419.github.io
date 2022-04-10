@@ -55,5 +55,18 @@ main{
                 color: rgb(184, 184, 184);
             }
         }
+        .backBtn{
+            font-size: 14px;
+            font-weight: 700;
+            width: 80px;
+            height: 45px;
+            background-color: rgb(255, 211, 154);;
+            border: 0px;
+            border-radius: 10px;
+        }
+        .backBtn a{
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+        }
     }
 }
