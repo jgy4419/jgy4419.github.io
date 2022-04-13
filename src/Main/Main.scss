@@ -1,52 +1,11 @@
-// .mainContainer{
-//     width: 100vw;
-//     height: 100vh;
-//     background-image: url('https://mblogthumb-phinf.pstatic.net/MjAxNjEyMDFfMTE4/MDAxNDgwNTU2NTkxMzU4.Y65eOYio8gcLAMxB7T_HKirz8BwP12TU9wycJSrgS20g.GX05z2J0198ZrB0srD0sTjS9xfZf-LSRp1xPjRUWjFIg.JPEG.aranjubon/%EC%B6%A9%EC%A3%BC%EC%9D%98%EB%A3%8C%EC%9B%90.jpg?type=w800');
-//     background-repeat: no-repeat;
-//     background-size: cover;
-//     text-align: center;
-//     .inner{
-//         margin-top: 20%;
-//         .title{
-//             font-size: 70px;
-//             font-weight: 900;
-//             color: #fff;
-//             opacity: 0;
-//             // transition: 1s;
-//         }
-//         .btn{
-//             margin-top: 10%;
-//             font-size: 23px;
-//             font-weight: 900;
-//             border-radius: 30px;
-//             width: 180px;
-//             height: 60px;
-//             background-color: #fff;
-//             color: #333;
-//             cursor: pointer;
-//             border: 2px solid #fff;
-//             opacity: 0;
-//         }
-//         .btn.event, .title.event{
-//             opacity: 1;
-//             transition: 1s;
-//             transform: translateY(-100px);
-//         }
-//         .btn:hover{
-//             transition: .3s;
-//             background-color: transparent;
-//             color: #fff;
-//         }
-//     }
-// }
 
 .mainContainer{
     width: 100vw;
     .inner{
         position: relative;
         margin: auto;
-        width: 70vw;
-        height: 88vh;
+        width: 1000px;
+        height: 800px;
         .title{
             margin-top: 5%;
             font-size: 40px;
