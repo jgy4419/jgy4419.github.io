@@ -70,75 +70,35 @@ function KakaoMap(){
                     dispatch({type: '내위치', payload: {x: latitude, y: longitude}});
                     // 위치를 찾으면 카카오맵의 위치를 현재위치로 재설정해서 재로딩 시켜줌.
                     resolve(mapReset(state[0].clickLocationsX, state[0].clickLocationsY));
-                    var infowindow = new kakao.maps.InfoWindow({zIndex:1});
                     
 
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };  
-    console.log(changeInfoDiv);
-// 지도를 생성합니다    
-// var map = new kakao.maps.Map(mapContainer, mapOption); 
+                var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                    mapOption = {
+                        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+                        level: 3 // 지도의 확대 레벨
+                    };  
+                // 지도를 생성합니다    
+                // var map = new kakao.maps.Map(mapContainer, mapOption); 
 
-// 장소 검색 객체를 생성합니다
-var ps = new kakao.maps.services.Places(); 
-
-// 키워드로 장소를 검색합니다
-ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
-
-// 키워드 검색 완료 시 호출되는 콜백함수 입니다
-function placesSearchCB (data, status, pagination) {
-    if (status === kakao.maps.services.Status.OK) {
-
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-        // LatLngBounds 객체에 좌표를 추가합니다
-        var bounds = new kakao.maps.LatLngBounds();
-
-        for (var i=0; i<data.length; i++) {
-            displayMarker(data[i]);    
-            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-        }       
-
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-        map.setBounds(bounds);
-    } 
-}
-
-// 지도에 마커를 표시하는 함수입니다
-function displayMarker(place) {
-    
-    // 마커를 생성하고 지도에 표시합니다
-    var marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(place.y, place.x) 
+                // var infoDiv = document.getElementById('centerAddr');
+ 
+            }, function(error){
+                console.log(error);
+            }, {
+                enableHighAccuracy: false,
+                maximumAge: 0, 
+                timeout: Infinity
+            });
+        }else{
+            alert('GPS를 지원하지 않습니다.');
+            reject('실패');
+        }
+        // allLocation();
+    })
+    // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+    kakao.maps.event.addListener(map, 'idle', function() {
+        searchAddrFromCoords(map.getCenter(), displayCenterInfo);
     });
-
-    // 마커에 클릭이벤트를 등록합니다
-    kakao.maps.event.addListener(marker, 'click', function() {
-        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-        infowindow.open(map, marker);
-    });
-}
-                }, function(error){
-                    console.log(error);
-                }, {
-                    enableHighAccuracy: false,
-                    maximumAge: 0,
-                    timeout: Infinity
-                });
-            }else{
-                alert('GPS를 지원하지 않습니다.');
-                reject('실패');
-            }
-            // allLocation();
-        })
-        // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
-        kakao.maps.event.addListener(map, 'idle', function() {
-            searchAddrFromCoords(map.getCenter(), displayCenterInfo);
-        });
     }, [])
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
     function reload(){
@@ -172,42 +132,6 @@ function displayMarker(place) {
         // 마커가 표시될 위치
         var markerPosition  = new kakao.maps.LatLng(latitude, longitude),
             markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption); 
-        
-        // 전체 병원 위치 좌표 찍어주기.
-        axios.get('http://localhost:8800/hospital')
-        .then(res => {
-            // 마커 이미지의 이미지 주소입니다
-            var imageSrc = "https://st2.depositphotos.com/1561359/12005/v/600/depositphotos_120054088-stock-illustration-hospital-icon-sign.jpg"; 
-            for(var i = 0; i < res.data.length; i++){
-                console.log('bb', res.data[i].name);
-            }
-            res.data.map(i => {
-                var imageSize = new kakao.maps.Size(24, 35); 
-                console.log('i는' + i.name);
-                
-                // 마커 이미지를 생성합니다    
-                var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
-                
-                // 마커를 생성합니다
-                var marker = new kakao.maps.Marker({
-                    map: map, // 마커를 표시할 지도
-                    content: `<div>${i.title}</div>`,
-                    position: new kakao.maps.LatLng(i.xAxis, i.yAxis), // 마커를 표시할 위치 // 마커.. 여러개 띄우게 하기..
-                    title : i.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                    image : markerImage // 마커 이미지 
-                });
-                var infowindow = new kakao.maps.InfoWindow({
-                    content: `<div class="hospitalName">
-                                이름 : ${i.name} <br/>
-                                전화번호 : ${i.tel}
-                            </div>` // 인포윈도우에 표시할 내용
-                });
-                kakao.maps.event.addListener(marker, 'mouseover', makeOverListener(map, marker, infowindow));
-                kakao.maps.event.addListener(marker, 'mouseout', makeOutListener(infowindow));
-            })
-            .catch(err => {console.log(err)})
-            
-        });
         function makeOverListener(map, marker, infowindow) {
             return function() {
                 infowindow.open(map, marker);
@@ -235,45 +159,14 @@ function displayMarker(place) {
         // 현재 지도 중심좌표로 주소를 검색해서 지도 좌측 상단에 표시합니다
         searchAddrFromCoords(map.getCenter(), displayCenterInfo);
 
-        // 지도를 클릭했을 때 클릭 위치 좌표에 대한 주소정보를 표시하도록 이벤트를 등록합니다
-        // kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
-        //     searchDetailAddrFromCoords(mouseEvent.latLng, function(result, status) {
-        //         if (status === kakao.maps.services.Status.OK) {
-        //             var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
-        //             detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
-                    
-        //             var content = '<div class="bAddr">' +
-        //                             '<span class="title">법정동 주소정보</span>' + 
-        //                             detailAddr + 
-        //                         '</div>';
-
-        //             // 마커를 클릭한 위치에 표시합니다 
-        //             marker.setPosition(mouseEvent.latLng);
-        //             marker.setMap(map);
-
-        //             // 인포윈도우에 클릭한 위치에 대한 법정동 상세 주소정보를 표시합니다
-        //             infowindow.setContent(content);
-        //             infowindow.open(map, marker);
-        //         }   
-        //     });
-        // });
-
-        // // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
-        // kakao.maps.event.addListener(map, 'idle', function() {
-        //     searchAddrFromCoords(map.getCenter(), displayCenterInfo);
-        // });
-
         function searchAddrFromCoords(coords, callback) {
             // 좌표로 행정동 주소 정보를 요청합니다
             geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
         }
-        // function searchDetailAddrFromCoords(coords, callback) {
-        //     // 좌표로 법정동 상세 주소 정보를 요청합니다
-        //     geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-        // }
     }
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
     function displayCenterInfo(result, status) {
+        var infowindow = new kakao.maps.InfoWindow({zIndex:1});
         if (status === kakao.maps.services.Status.OK) {
             // infoDiv의 innerHTML 값을 전송
             var infoDiv = document.getElementById('centerAddr');
@@ -285,8 +178,46 @@ function displayMarker(place) {
                 }
             }
             changeInfoDiv = infoDiv.innerHTML;
-            console.log(changeInfoDiv);
-            
+            // 장소 검색 객체를 생성합니다
+            var ps = new kakao.maps.services.Places(); 
+            console.log('please..', changeInfoDiv);
+            // 키워드로 장소를 검색합니다
+            ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
+
+            // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+            function placesSearchCB (data, status, pagination) {
+                if (status === kakao.maps.services.Status.OK) {
+
+                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                    // LatLngBounds 객체에 좌표를 추가합니다
+                    var bounds = new kakao.maps.LatLngBounds();
+
+                    for (var i=0; i<data.length; i++) {
+                        displayMarker(data[i]);    
+                        bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+                    }       
+
+                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+                    map.setBounds(bounds);
+                } 
+            }
+
+                // 지도에 마커를 표시하는 함수입니다
+            function displayMarker(place) {
+                
+                // 마커를 생성하고 지도에 표시합니다
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: new kakao.maps.LatLng(place.y, place.x) 
+                });
+
+                // 마커에 클릭이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'click', function() {
+                    // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+                    infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+                    infowindow.open(map, marker);
+                });
+            }
         }
     }
     return(
