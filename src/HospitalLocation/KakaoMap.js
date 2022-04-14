@@ -70,18 +70,6 @@ function KakaoMap(){
                     dispatch({type: '내위치', payload: {x: latitude, y: longitude}});
                     // 위치를 찾으면 카카오맵의 위치를 현재위치로 재설정해서 재로딩 시켜줌.
                     resolve(mapReset(state[0].clickLocationsX, state[0].clickLocationsY));
-                    
-
-                var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-                    mapOption = {
-                        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-                        level: 3 // 지도의 확대 레벨
-                    };  
-                // 지도를 생성합니다    
-                // var map = new kakao.maps.Map(mapContainer, mapOption); 
-
-                // var infoDiv = document.getElementById('centerAddr');
- 
             }, function(error){
                 console.log(error);
             }, {
@@ -179,8 +167,7 @@ function KakaoMap(){
             }
             changeInfoDiv = infoDiv.innerHTML;
             // 장소 검색 객체를 생성합니다
-            var ps = new kakao.maps.services.Places(); 
-            console.log('please..', changeInfoDiv);
+            var ps = new kakao.maps.services.Places();
             // 키워드로 장소를 검색합니다
             ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
 
@@ -210,11 +197,25 @@ function KakaoMap(){
                     map: map,
                     position: new kakao.maps.LatLng(place.y, place.x) 
                 });
-
+                // 병원이름, 병원 전화번호, 병원 상세주소, 병원후기, 
+                console.log(place)
+                console.log(place.place_name);
+                console.log(place.phone);
+                // 병원 데이터들을 redux로 넣어주는 부분.
+                dispatch({type: '병원정보', payload: {
+                    name: place.place_name, phone: place.phone, address: place.road_address_name, url: place.place_url
+                }})
                 // 마커에 클릭이벤트를 등록합니다
-                kakao.maps.event.addListener(marker, 'click', function() {
+                kakao.maps.event.addListener(marker, 'mouseover', function() {
                     // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-                    infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+                    infowindow.setContent(`<div style=
+                        "padding:5px;
+                        text-align: center;
+                        width: 150px;
+                        height: 30px;
+                        font-size:13px;
+                        font-weight: 700;"
+                    >` + place.place_name + '</div>');
                     infowindow.open(map, marker);
                 });
             }
