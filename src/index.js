@@ -11,10 +11,11 @@ import { BrowserRouter } from 'react-router-dom';
 
 import {Provider} from 'react-redux'
 import { createStore } from 'redux';
+import { combineReducers } from 'redux';
 
 let defaultState = [
   {clickLocationsX: 0, clickLocationsY: 0, myLocationX: 0, myLocationY: 0, hospitalName: ''},
-  {hospitalName: '', hospitalPhone: '', hospitalUrl: '', hospitalAddress: ''}
+  {hospitalName: 'b', hospitalPhone: 'ㅠ', hospitalUrl: '', hospitalAddress: ''}
 ]
 
 function reducer(state = defaultState, action){
@@ -27,8 +28,11 @@ function reducer(state = defaultState, action){
   }else if(action.type === '내위치'){
     copy[0].clickLocationsX = action.payload.x;
     copy[0].clickLocationsY = action.payload.y;
-  }else if(action.type === '테스트'){
-    copy[0].hospitalNames = action.payload.test;
+  }else if(action.type === '병원정보'){
+    copy[1].hospitalName = action.payload.name;
+    copy[1].hospitalPhone = action.payload.phone;
+    copy[1].hospitalUrl = action.payload.url;
+    copy[1].hospitalAddress = action.payload.address
   }else{
     return state;
   }
@@ -46,6 +50,10 @@ function hospitalInformation(state = defaultState, action){
   }
   return state;
 }
+// const rootReducer = combineReducers({
+//   reducer, 
+//   hospitalInformation
+// })
 
 // combineReducers를 사용해서 reducer 여러 개 등록.
 let store = createStore(reducer);

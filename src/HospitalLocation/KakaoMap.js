@@ -205,6 +205,7 @@ function KakaoMap(){
                 dispatch({type: '병원정보', payload: {
                     name: place.place_name, phone: place.phone, address: place.road_address_name, url: place.place_url
                 }})
+                console.log('ㅠㅠ', state[1].hospitalName)
                 // 마커에 클릭이벤트를 등록합니다
                 kakao.maps.event.addListener(marker, 'mouseover', function() {
                     // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
