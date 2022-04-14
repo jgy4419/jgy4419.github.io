@@ -19,23 +19,30 @@ function HospitalInformation(props){
 
     let state = useSelector(state => state);
     let dispatch = useDispatch();
+
+    let [name, setName] = useState([]);
     useEffect(() => {
-        console.log('!!', state[1].hospitalName);
+        setTimeout(() => {
+            // for(var i = 0; i < 10; i++){
+                // console.log(testArray);
+                // setName(testArray);
+                console.log('스테이트2', state[1]);
+            // }
+            setName([...name, state[1].hospitalName]);
+        }, 5000)
     }, [])
     return(
         <div className="container">
             <ul>
+                <li>{name}</li>
                 {
-                    props.data.map(i => {
+                    name.map(i => {
                         return(
-                            // 리스트를 클릭하면 클릭한 병원의 좌표를 kakaoMap 한테 보내줘야됨.
-                            <div className="list" onClick={locationSend}>
-                                {/* <div>{props.searchText}</div> */}
+                            <div className="list">
                                 <div>
-                                    <p className = "name">{i.name}</p>
-                                    <p className = "tel">{i.tel}</p>
+                                    <p className = "name">{i[0]}</p>
+                                    <p className = "tel">34</p>
                                 </div>
-                                {/* <hr/> */}
                             </div>
                         )
                     })

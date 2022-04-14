@@ -15,7 +15,7 @@ import { combineReducers } from 'redux';
 
 let defaultState = [
   {clickLocationsX: 0, clickLocationsY: 0, myLocationX: 0, myLocationY: 0, hospitalName: ''},
-  {hospitalName: 'b', hospitalPhone: 'ㅠ', hospitalUrl: '', hospitalAddress: ''}
+  {hospitalName: [], hospitalPhone: 'b', hospitalUrl: '', hospitalAddress: ''}
 ]
 
 function reducer(state = defaultState, action){
@@ -29,7 +29,8 @@ function reducer(state = defaultState, action){
     copy[0].clickLocationsX = action.payload.x;
     copy[0].clickLocationsY = action.payload.y;
   }else if(action.type === '병원정보'){
-    copy[1].hospitalName = action.payload.name;
+    // 바로 아래처럼 수정하기.
+    copy[1].hospitalName.push(action.payload.name);
     copy[1].hospitalPhone = action.payload.phone;
     copy[1].hospitalUrl = action.payload.url;
     copy[1].hospitalAddress = action.payload.address
