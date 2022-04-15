@@ -19,34 +19,49 @@ function HospitalInformation(props){
 
     let state = useSelector(state => state);
     let dispatch = useDispatch();
-
-    let [name, setName] = useState([]);
+    let [hospital, setHospital] = useState([]);
     useEffect(() => {
+        // 여기 수정.. setTimeout 안써야됨,,
         setTimeout(() => {
-            // for(var i = 0; i < 10; i++){
-                // console.log(testArray);
-                // setName(testArray);
-                console.log('스테이트2', state[1]);
-            // }
-            setName([...name, state[1].hospitalName]);
+            console.log('스테이트2', state[1]);
+            // useState에 배열 넣는 방법.
+            setHospital(state[1].hospital);
         }, 5000)
     }, [])
+    function Information(){
+        let array = [];
+        for(let i = 0; i < name.length; i++){
+            array.push(
+                <div className="list">
+                    <div>
+                        <p className = "name">{name[i]}</p>
+                        <p className = "tel">{phone[i]}</p>
+                        <p className = "url">{url[i]}</p>
+                        <p className = "address">{address[i]}</p>
+                    </div>
+                </div>
+            );
+        }
+        return array;
+    }
     return(
         <div className="container">
             <ul>
-                <li>{name}</li>
                 {
-                    name.map(i => {
+                    hospital.map(i => {
                         return(
                             <div className="list">
                                 <div>
-                                    <p className = "name">{i[0]}</p>
-                                    <p className = "tel">34</p>
+                                    <p className = "name">{i.place_name}</p>
+                                    <p className = "tel">{i.phone}</p>
+                                    <p className = "address">{i.road_address_name}</p>
+                                    <p className = "url">{i.place_url}</p>
                                 </div>
                             </div>
                         )
                     })
                 }
+                {/* {Information()} */}
             </ul>
         </div>
     )

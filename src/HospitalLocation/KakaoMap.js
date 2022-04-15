@@ -197,13 +197,10 @@ function KakaoMap(){
                     map: map,
                     position: new kakao.maps.LatLng(place.y, place.x) 
                 });
-                // 병원이름, 병원 전화번호, 병원 상세주소, 병원후기, 
-                console.log(place)
-                console.log(place.place_name);
-                console.log(place.phone);
                 // 병원 데이터들을 redux로 넣어주는 부분.
+                // 나중에 추가적으로 좌표 작업하기.
                 dispatch({type: '병원정보', payload: {
-                    name: place.place_name, phone: place.phone, address: place.road_address_name, url: place.place_url
+                    hospital: place
                 }})
                 console.log('ㅠㅠ', state[1].hospitalName)
                 // 마커에 클릭이벤트를 등록합니다

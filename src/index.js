@@ -15,7 +15,7 @@ import { combineReducers } from 'redux';
 
 let defaultState = [
   {clickLocationsX: 0, clickLocationsY: 0, myLocationX: 0, myLocationY: 0, hospitalName: ''},
-  {hospitalName: [], hospitalPhone: 'b', hospitalUrl: '', hospitalAddress: ''}
+  {hospital: []}
 ]
 
 function reducer(state = defaultState, action){
@@ -30,31 +30,12 @@ function reducer(state = defaultState, action){
     copy[0].clickLocationsY = action.payload.y;
   }else if(action.type === '병원정보'){
     // 바로 아래처럼 수정하기.
-    copy[1].hospitalName.push(action.payload.name);
-    copy[1].hospitalPhone = action.payload.phone;
-    copy[1].hospitalUrl = action.payload.url;
-    copy[1].hospitalAddress = action.payload.address
+    copy[1].hospital.push(action.payload.hospital);
+    
   }else{
     return state;
   }
 }
-
-// 병원들 정보 가져오면 병원들의 정보들을 가져옴. (좌표값 추가적으로 가져와서 넣기.)
-function hospitalInformation(state = defaultState, action){
-  let copy = [...state];
-  if(action.type === '병원정보'){
-    copy[1].hospitalName = action.payload.name;
-    copy[1].hospitalPhone = action.payload.phone;
-    copy[1].hospitalUrl = action.payload.url;
-    copy[1].hospitalAddress = action.payload.address
-    return copy;
-  }
-  return state;
-}
-// const rootReducer = combineReducers({
-//   reducer, 
-//   hospitalInformation
-// })
 
 // combineReducers를 사용해서 reducer 여러 개 등록.
 let store = createStore(reducer);
