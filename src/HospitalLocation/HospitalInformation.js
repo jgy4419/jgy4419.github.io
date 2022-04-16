@@ -2,8 +2,8 @@
 
 import React, {useState, useEffect} from 'react';
 import './HospitalInformation.scss'
-import test from '../data/test.json'
 import axios from 'axios';
+import Spinner from '../Spinner';
 
 import {connect, useSelector, useDispatch} from 'react-redux';
 
@@ -17,6 +17,8 @@ function HospitalInformation(props){
     // 리스트 상태.
     let [listState, setListState] = useState(0);
 
+    let [spinner, setSpinner] = useState(true);
+
     let state = useSelector(state => state);
     let dispatch = useDispatch();
     let [hospital, setHospital] = useState([]);
@@ -26,24 +28,9 @@ function HospitalInformation(props){
             console.log('스테이트2', state[1]);
             // useState에 배열 넣는 방법.
             setHospital(state[1].hospital);
+            setSpinner(false);
         }, 5000)
     }, [])
-    function Information(){
-        let array = [];
-        for(let i = 0; i < name.length; i++){
-            array.push(
-                <div className="list">
-                    <div>
-                        <p className = "name">{name[i]}</p>
-                        <p className = "tel">{phone[i]}</p>
-                        <p className = "url">{url[i]}</p>
-                        <p className = "address">{address[i]}</p>
-                    </div>
-                </div>
-            );
-        }
-        return array;
-    }
     return(
         <div className="container">
             <ul>
@@ -55,13 +42,16 @@ function HospitalInformation(props){
                                     <p className = "name">{i.place_name}</p>
                                     <p className = "tel">{i.phone}</p>
                                     <p className = "address">{i.road_address_name}</p>
-                                    <p className = "url">{i.place_url}</p>
                                 </div>
                             </div>
                         )
                     })
                 }
-                {/* {Information()} */}
+                {
+                    spinner === true
+                    ? (<Spinner className="spinner"/>)
+                    : null
+                }
             </ul>
         </div>
     )
