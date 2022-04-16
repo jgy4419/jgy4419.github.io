@@ -31,7 +31,7 @@ function reducer(state = defaultState, action){
   }else if(action.type === '병원정보'){
     // 바로 아래처럼 수정하기.
     copy[1].hospital.push(action.payload.hospital);
-    
+
   }else{
     return state;
   }

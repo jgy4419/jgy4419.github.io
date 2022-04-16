@@ -22,14 +22,19 @@ function HospitalInformation(props){
     let state = useSelector(state => state);
     let dispatch = useDispatch();
     let [hospital, setHospital] = useState([]);
+    let stop = '';
+
     useEffect(() => {
-        // 여기 수정.. setTimeout 안써야됨,,
-        setTimeout(() => {
-            console.log('스테이트2', state[1]);
+        let interval = setInterval(() => {
+            console.log('after', state[1].addressChange);
             // useState에 배열 넣는 방법.
             setHospital(state[1].hospital);
-            setSpinner(false);
-        }, 5000)
+            stop = state[1].addressChange;
+            if(stop !== ''){
+                clearInterval(interval);
+                setSpinner(false);
+            }
+        }, 1000);
     }, [])
     return(
         <div className="container">

@@ -69,7 +69,10 @@ function KakaoMap(){
                     // 내위치를 지정.
                     dispatch({type: '내위치', payload: {x: latitude, y: longitude}});
                     // 위치를 찾으면 카카오맵의 위치를 현재위치로 재설정해서 재로딩 시켜줌.
+                    // 실제 내 위치(마커적용)
                     resolve(mapReset(state[0].clickLocationsX, state[0].clickLocationsY));
+                    // test 위치(마커적용)
+                    // resolve(mapReset(36.99196502823086, 127.92563283606664));
             }, function(error){
                 console.log(error);
             }, {
@@ -98,6 +101,9 @@ function KakaoMap(){
         // 화면이 띄워지면 spinner 제거.
         spinnerChange(false);
         mapOption = { 
+            // test 위치
+            // center: new kakao.maps.LatLng(36.99196502823086, 127.92563283606664),
+            // 내 위치
             center: new kakao.maps.LatLng(state[0].clickLocationsX, state[0].clickLocationsY), // 지도의 중심좌표
             level: 3 // 지도의 확대 레벨
         };
@@ -202,7 +208,6 @@ function KakaoMap(){
                 dispatch({type: '병원정보', payload: {
                     hospital: place
                 }})
-                console.log('ㅠㅠ', state[1].hospitalName)
                 // 마커에 클릭이벤트를 등록합니다
                 kakao.maps.event.addListener(marker, 'mouseover', function() {
                     // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
