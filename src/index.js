@@ -14,8 +14,9 @@ import { createStore } from 'redux';
 import { combineReducers } from 'redux';
 
 let defaultState = [
-  {clickLocationsX: 0, clickLocationsY: 0, myLocationX: 0, myLocationY: 0, hospitalName: ''},
-  {hospital: []}
+  {myLocationX: 0, myLocationY: 0, hospitalName: ''},
+  {hospital: [], setAddress: '', x: [], y: [], hospitalCount: 0},
+  {search: ''}
 ]
 
 function reducer(state = defaultState, action){
@@ -31,7 +32,12 @@ function reducer(state = defaultState, action){
   }else if(action.type === '병원정보'){
     // 바로 아래처럼 수정하기.
     copy[1].hospital.push(action.payload.hospital);
-
+    copy[1].setAddress = action.payload.address;
+    copy[1].x.push(action.payload.x);
+    copy[1].y.push(action.payload.y);
+    copy[1].hospitalCount = action.payload.count;
+  }else if(action.type === '검색'){
+    copy[2].search = action.payload.sendInput;
   }else{
     return state;
   }

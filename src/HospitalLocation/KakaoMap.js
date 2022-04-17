@@ -30,6 +30,9 @@ function KakaoMap(){
     }
 
     let [changeInfoDiv, setChangeInfoDiv] = useState('');
+    
+    // 좌표 카운트
+    let count = 0;
 
     useEffect(async () => {
         // 처음에 지도 표시해주기.
@@ -157,6 +160,31 @@ function KakaoMap(){
             // 좌표로 행정동 주소 정보를 요청합니다
             geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
         }
+
+        // 지동 이동시키기
+        function panTo() {
+            // 바뀔 좌표 위, 경도
+            let changeX = [];
+            let changeY = [];
+            changeX.push(state[1].x);
+            changeY.push(state[1].y);
+            // 이동할 위도 경도 위치를 생성합니다 
+            var moveLatLon = new kakao.maps.LatLng(changeX[count], changeY[count]);
+            // 지도 중심을 부드럽게 이동시킵니다
+            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+            map.panTo(moveLatLon);            
+        } 
+        // let interval = setInterval(function(){
+        count = state[1].hospitalCount;
+        console.log('test', state[1].x[count], state[1].y[count], count);
+        // count = 0;
+        if(count !== 0){
+            panTo();
+            console.log('Wow');
+            console.log('변경', state[1].hospitalCount);
+            clearInterval(interval);
+        }
+        // }, 1000)
     }
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
     function displayCenterInfo(result, status) {
@@ -205,8 +233,9 @@ function KakaoMap(){
                 });
                 // 병원 데이터들을 redux로 넣어주는 부분.
                 // 나중에 추가적으로 좌표 작업하기.
+                // place.x는 x좌표, place.y는 y좌표.
                 dispatch({type: '병원정보', payload: {
-                    hospital: place
+                    hospital: place, address: changeInfoDiv, x: place.x, y: place.y
                 }})
                 // 마커에 클릭이벤트를 등록합니다
                 kakao.maps.event.addListener(marker, 'mouseover', function() {
