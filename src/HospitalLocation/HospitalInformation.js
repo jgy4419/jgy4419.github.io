@@ -27,6 +27,7 @@ function HospitalInformation(props){
     let stop = '';
 
     useEffect(() => {
+        console.log(state[2].mainSearch)
         let interval = setInterval(() => {
             // useState에 배열 넣는 방법.
             setHospital(state[1].hospital);

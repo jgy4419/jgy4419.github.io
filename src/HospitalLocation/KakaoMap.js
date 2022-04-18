@@ -42,23 +42,26 @@ function KakaoMap(){
             center: new kakao.maps.LatLng(36.99196502823086, 127.92563283606664),
             level: 7 // 지도의 확대 레벨
         };
-        let testBtn = document.querySelector('.testBtn');
-        function panTo() {
-            // 이동할 위도 경도 위치를 생성합니다 
-            var moveLatLon = new kakao.maps.LatLng(state[0].clickLocationsX, state[0].clickLocationsY);
+        let test2 = state[2].mainSearch;
+
+        console.log(test2);
+        // let testBtn = document.querySelector('.testBtn');
+        // function panTo() {
+        //     // 이동할 위도 경도 위치를 생성합니다 
+        //     var moveLatLon = new kakao.maps.LatLng(state[0].clickLocationsX, state[0].clickLocationsY);
                 
-            // 지도 중심을 부드럽게 이동시킵니다
-            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-            map.panTo(moveLatLon);             
-        }       
-        // /////////////////////////////
-        // 테스트라는 변수에 함수를 보냄
-        // dispatch({type: '테스트', payload: {func: panTo()}});
-        ////////////////////////////////
+        //     // 지도 중심을 부드럽게 이동시킵니다
+        //     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+        //     map.panTo(moveLatLon);             
+        // }       
+        // // /////////////////////////////
+        // // 테스트라는 변수에 함수를 보냄
+        // // dispatch({type: '테스트', payload: {func: panTo()}});
+        // ////////////////////////////////
         
-        testBtn.addEventListener('click', function(){
-            panTo();
-        })
+        // testBtn.addEventListener('click', function(){
+        //     panTo();
+        // })
         // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
         map = new kakao.maps.Map(mapContainer, mapOption);
         // 위치 찾기 버튼을 누르면 spinner 생성.
@@ -203,7 +206,13 @@ function KakaoMap(){
             // 장소 검색 객체를 생성합니다
             var ps = new kakao.maps.services.Places();
             // 키워드로 장소를 검색합니다
-            ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
+            if(state[2].search !== ''){
+                ps.keywordSearch(`${state[2].search} 병원`, placesSearchCB);                 
+            }else if(state[2].search === ''){
+                ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
+            }else if(state[2].mainSearch !== ''){
+                ps.keywordSearch(`${state[2].mainSearch} 병원`, placesSearchCB);    
+            }
 
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
             function placesSearchCB (data, status, pagination) {

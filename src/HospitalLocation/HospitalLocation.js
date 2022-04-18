@@ -33,28 +33,36 @@ function HospitalLocation(){
         }).catch((err) => {
             console.log('에러');
         })
+        clickBtn(inputValue);
     }, [])
     // enter 키 이벤트 (enter키를 누르면 검색이 실행된다.)
     const onkeyPress = e => {
         if(e.key == 'Enter'){
             // searchData();
-            console.log(e.target.value)
-            console.log('변수', inputValue);
-            inputSend(e.target.value);
-        }else{
-            let searchBtn = document.querySelector('.btn');
-            searchBtn.addEventListener('click', function(){
-                inputSend(e.target.value);
-            })
-            console.log('클리', e.target.value)
+            // console.log(e.target.value)
+            // console.log('변수', inputValue);
+            
+            // inputSend(e.target.value);
+
+            dispatch({type: '검색', payload: {
+                sendInput: inputValue,
+            }})
+            console.log('검색 결과', state[2].search);
         }
     }
-    function inputSend(input){
-        console.log('input', input);
-        dispatch({type: '검색', payload: {
-            sendInput: input,
-        }})
-        // console.log('검색 결과', state[2].search);
+    // function inputSend(input){
+    //     console.log('input', input);
+    //     console.log('검색 결과', state[2].search);
+    // }
+    function clickBtn(e){
+        let searchBtn = document.querySelector('.btn');
+        let search = document.querySelector('.search');
+        let test = searchBtn.addEventListener('click', function(){
+            console.log('클리', search.textContent);
+            dispatch({type: '검색', payload: {
+                sendInput: e.target.value,
+            }})
+        })
     }
     return(
         <main>
@@ -66,6 +74,7 @@ function HospitalLocation(){
                         onChange={onChange}/>
                         {/* 만약 검색 내용을 입력 후 검색버튼을 누르면 / DB내의 데이터들과 검색어와 동일한 값을 전송 */}
                         <button className="btn"
+                        onClick={clickBtn}
                         >검색</button>
                     </div>
                 </div>

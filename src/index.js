@@ -16,7 +16,7 @@ import { combineReducers } from 'redux';
 let defaultState = [
   {myLocationX: 0, myLocationY: 0, hospitalName: ''},
   {hospital: [], setAddress: '', x: [], y: [], hospitalCount: 0},
-  {search: ''}
+  {search: '', mainSearch: '', test: ''}
 ]
 
 function reducer(state = defaultState, action){
@@ -38,6 +38,7 @@ function reducer(state = defaultState, action){
     copy[1].hospitalCount = action.payload.count;
   }else if(action.type === '검색'){
     copy[2].search = action.payload.sendInput;
+    copy[2].mainSearch = action.payload.mainInput;
   }else{
     return state;
   }
