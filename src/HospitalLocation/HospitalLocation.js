@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* global kakao */
 import React, {useState, useEffect} from 'react';
 import { Link, Route } from 'react-router-dom';
@@ -5,6 +6,8 @@ import './HospitalLocation.scss'
 import KakaoMap from './KakaoMap';
 import HospitalInformation from './HospitalInformation'
 import axios from 'axios';
+
+import data from '../data/test.json';
 
 import { useDispatch, useSelector } from 'react-redux';
 // JSON 파일 서버 : npx json-server ./data.json(저장한 파일명) --watch --port 8080
@@ -21,20 +24,7 @@ function HospitalLocation(){
 
     let state = useSelector(state => state);
     let dispatch = useDispatch();
-    
-    useEffect(()=>{
-        // 처음에는 전체 리스트 보이도록 해주기.
-        axios.get('http://localhost:8800/hospital')
-        .then(res => {
-            for(let i = 0; i < res.data.length; i++){
-                setA([...res.data]);
-                
-            }
-        }).catch((err) => {
-            console.log('에러');
-        })
-        clickBtn(inputValue);
-    }, [])
+
     // enter 키 이벤트 (enter키를 누르면 검색이 실행된다.)
     const onkeyPress = e => {
         if(e.key == 'Enter'){
@@ -43,11 +33,11 @@ function HospitalLocation(){
             // console.log('변수', inputValue);
             
             // inputSend(e.target.value);
-
-            dispatch({type: '검색', payload: {
-                sendInput: inputValue,
-            }})
-            console.log('검색 결과', state[2].search);
+            data[0].kakaoMapSearch = e.target.value;
+            // dispatch({type: '검색', payload: {
+            //     sendInput: inputValue,
+            // }})
+            console.log('검색 결과', data[0].kakaoMapSearch);
         }
     }
     // function inputSend(input){
@@ -67,22 +57,21 @@ function HospitalLocation(){
     return(
         <main>
             <div className="inner">
-                <div className="searchBox">
+                {/* <div className="searchBox">
                     <div className="searchBox">
                         <input className="search" placeholder="Search" type="text"
                         onKeyPress={onkeyPress}
                         onChange={onChange}/>
-                        {/* 만약 검색 내용을 입력 후 검색버튼을 누르면 / DB내의 데이터들과 검색어와 동일한 값을 전송 */}
                         <button className="btn"
                         onClick={clickBtn}
                         >검색</button>
                     </div>
-                </div>
+                </div> */}
                 <hr className="line"/>
                 <div>
                 {/* <p>{inputValue}</p> */}
                 </div>
-                <div className="list">
+                {/* <div className="list">
                     <div>
                     {
                         list.map((i) => {
@@ -92,7 +81,7 @@ function HospitalLocation(){
                         })
                     }
                     </div>
-                </div>
+                </div> */}
                 <section className="section">
                     <KakaoMap/>
                     {/* input 값을 props로 보내기. */}

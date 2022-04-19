@@ -3,6 +3,9 @@ import './Main.scss'
 import {Link, Route, Switch} from 'react-router-dom'
 
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+
+import data from '../data/test.json'
 // json 서버 열기 => npx json-server ./test.json --watch --port 8800
 function Main(){
     
@@ -10,6 +13,8 @@ function Main(){
     let dispatch = useDispatch();
 
     useEffect(() => {
+        localStorage.removeItem('search')
+        console.log(data);
         pageLoding();
     })
     function pageLoding(){
@@ -24,17 +29,10 @@ function Main(){
     }
     const onKeyPress = e => {
         if(e.key === 'Enter'){
-            // setTimeout(() => {
-                dispatch({type: '검색', payload:{
-                    mainInput: e.target.value,
-                }});
-                console.log(state[2].mainSearch);
-                
-            // }, 1000);
-            // window.location.href = '/hospital';
-            window.location.reload();
-            // window.parent.location.hash = 'hospital';
+            // localStorage에 저장 시키기.
+            localStorage.setItem('search', e.target.value);
             console.log(state[2].mainSearch);
+            window.location.href = '/hospital';
         }
     }
     return(
@@ -46,13 +44,14 @@ function Main(){
                         <p className='title1'>어떤 <i className="fa fas fa-hospital"/>을 <br/>찾으세요?</p>
                         <div className='searchBox'>
                             <input onKeyPress={onKeyPress} className = 'search' placeholder='병원 이름을 입력해주세요!'/>
-                            {/* <Link to="/hospital"><button className="btn">검색</button></Link> */}
                         </div>
-                        <Link to="/hospital"><button className="btn">찾으러 가기</button></Link>
                     </div>
                     <div className='item'>
-                        <p className='title2'>내 위치 주변에 있는 <br/> 병원을 찾아봐요!</p>
-                        <i className="fa fas fa-location-arrow"></i>
+                        <div>
+                            <p className='title2'>내 위치 주변에 있는 <br/> 병원을 찾아봐요!</p>
+                            <i className="fa fas fa-location-arrow"></i>
+                        </div>
+                        <Link to="/hospital"><button className="btn first">검색</button></Link>
                     </div>
                     <div className='item'>
                         <p className='title3'>개선할 점을 말해주세요!👨‍💻🧑🏻‍💻👩🏻‍💻</p>

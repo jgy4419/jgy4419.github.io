@@ -6,6 +6,8 @@ import React, {useState, useEffect, Component} from 'react';
 import Spinner from '../Spinner';
 import './KakaoMap.scss'
 
+import data from '../data/test.json';
+
 import {connect, useSelector, useDispatch} from 'react-redux';
 
 const { kakao } = window;
@@ -35,6 +37,9 @@ function KakaoMap(){
     let count = 0;
 
     useEffect(async () => {
+        console.log(localStorage.getItem('search'));
+        // 만약 DB에 값이 변경이 된다면? (임시 데이터)
+        data[0].kakaoMapSearch = '';
         // 처음에 지도 표시해주기.
         mapContainer = document.getElementById('map'); // 지도를 표시할 div 
         mapOption = { 
@@ -42,9 +47,6 @@ function KakaoMap(){
             center: new kakao.maps.LatLng(36.99196502823086, 127.92563283606664),
             level: 7 // 지도의 확대 레벨
         };
-        let test2 = state[2].mainSearch;
-
-        console.log(test2);
         // let testBtn = document.querySelector('.testBtn');
         // function panTo() {
         //     // 이동할 위도 경도 위치를 생성합니다 
@@ -82,20 +84,20 @@ function KakaoMap(){
             }, function(error){
                 console.log(error);
             }, {
-                enableHighAccuracy: false,
-                maximumAge: 0, 
-                timeout: Infinity
-            });
-        }else{
-            alert('GPS를 지원하지 않습니다.');
-            reject('실패');
-        }
-        // allLocation();
-    })
-    // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
-    kakao.maps.event.addListener(map, 'idle', function() {
-        searchAddrFromCoords(map.getCenter(), displayCenterInfo);
-    });
+                    enableHighAccuracy: false,
+                    maximumAge: 0, 
+                    timeout: Infinity
+                });
+            }else{
+                alert('GPS를 지원하지 않습니다.');
+                reject('실패');
+            }
+            // allLocation();
+        })
+        // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
+        kakao.maps.event.addListener(map, 'idle', function() {
+            searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+        });
     }, [])
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
     function reload(){
@@ -150,7 +152,7 @@ function KakaoMap(){
             content: content,
             yAnchor: 1
         });
-                // 주소-좌표 변환 객체를 생성합니다
+        // 주소-좌표 변환 객체를 생성합니다
         var geocoder = new kakao.maps.services.Geocoder();
 
         var marker = new kakao.maps.Marker(), // 클릭한 위치를 표시할 마커입니다
@@ -205,15 +207,15 @@ function KakaoMap(){
             changeInfoDiv = infoDiv.innerHTML;
             // 장소 검색 객체를 생성합니다
             var ps = new kakao.maps.services.Places();
-            // 키워드로 장소를 검색합니다
-            if(state[2].search !== ''){
-                ps.keywordSearch(`${state[2].search} 병원`, placesSearchCB);                 
-            }else if(state[2].search === ''){
+            // 내 위치에 주소가 있으면 내 위치 주변의 병원이 검색.
+            if(state[2].search === ''){
                 ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
-            }else if(state[2].mainSearch !== ''){
-                ps.keywordSearch(`${state[2].mainSearch} 병원`, placesSearchCB);    
             }
-
+            // 메인페이지의 input에(로컬스토리지에) 값이 들어가 있으면 그 값 기준으로 병원 검색.
+            if(localStorage.getItem('search') !== ''){
+                console.log('!!');
+                ps.keywordSearch(`${localStorage.getItem('search')} 병원`, placesSearchCB);
+            }
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
             function placesSearchCB (data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {
@@ -234,7 +236,6 @@ function KakaoMap(){
 
                 // 지도에 마커를 표시하는 함수입니다
             function displayMarker(place) {
-                
                 // 마커를 생성하고 지도에 표시합니다
                 var marker = new kakao.maps.Marker({
                     map: map,
@@ -277,7 +278,7 @@ function KakaoMap(){
                     <button className="testBtn">병원 찾기</button>
                 </div>
                 <div className="hAddr">
-                    <span className="title">지도중심기준 주소정보 : </span>
+                    <span className="title">내 위치 : </span>
                     <span id="centerAddr"></span>
                 </div>
             </div>
