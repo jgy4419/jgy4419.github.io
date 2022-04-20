@@ -13,8 +13,8 @@ function Main(){
     let dispatch = useDispatch();
 
     useEffect(() => {
-        localStorage.removeItem('search')
-        console.log(data);
+        // 메인 페이지로 돌아오면 로컬스토리지 안에 search 값을 없애준다.
+        localStorage.removeItem('search');
         pageLoding();
     })
     function pageLoding(){
@@ -28,10 +28,11 @@ function Main(){
       }, 1000);
     }
     const onKeyPress = e => {
+        // input(검색창)에 검색어를 누르면 enter키를 누르면
         if(e.key === 'Enter'){
-            // localStorage에 저장 시키기.
+            // 검색 결과를 localStorage에 저장 시키기.
             localStorage.setItem('search', e.target.value);
-            console.log(state[2].mainSearch);
+            // url 변경시켜주기.
             window.location.href = '/hospital';
         }
     }
@@ -51,10 +52,10 @@ function Main(){
                             <p className='title2'>내 위치 주변에 있는 <br/> 병원을 찾아봐요!</p>
                             <i className="fa fas fa-location-arrow"></i>
                         </div>
-                        <Link to="/hospital"><button className="btn first">검색</button></Link>
+                        <Link to="/hospital"><button className="btn first">병원찾기!</button></Link>
                     </div>
                     <div className='item'>
-                        <p className='title3'>개선할 점을 말해주세요!👨‍💻🧑🏻‍💻👩🏻‍💻</p>
+                        <p className='title3'>개선할 점을 말해주세요! 👨‍💻🧑🏻‍💻👩🏻‍💻</p>
                         <Link to="/about"><button className="btnAbout">문의하기</button></Link>
                     </div>
                     </div>

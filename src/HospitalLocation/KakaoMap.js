@@ -101,6 +101,7 @@ function KakaoMap(){
     }, [])
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
     function reload(){
+        localStorage.removeItem('search');
         window.location.reload();
     }
 
