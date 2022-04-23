@@ -12,7 +12,7 @@ import {connect, useSelector, useDispatch} from 'react-redux';
 
 const { kakao } = window;
 
-function KakaoMap(){
+function KakaoMap(props){
     let state = useSelector(state => state);
     let dispatch = useDispatch();
 
@@ -34,11 +34,10 @@ function KakaoMap(){
     let [changeInfoDiv, setChangeInfoDiv] = useState('');
     
     // 좌표 카운트
-    let count = 0;
+    let [count, setCount] = useState(0);
+
 
     useEffect(async () => {
-        console.log(localStorage.getItem('search'));
-        // 만약 DB에 값이 변경이 된다면? (임시 데이터)
         data[0].kakaoMapSearch = '';
         // 처음에 지도 표시해주기.
         mapContainer = document.getElementById('map'); // 지도를 표시할 div 
@@ -47,23 +46,6 @@ function KakaoMap(){
             center: new kakao.maps.LatLng(36.99196502823086, 127.92563283606664),
             level: 7 // 지도의 확대 레벨
         };
-        // let testBtn = document.querySelector('.testBtn');
-        // function panTo() {
-        //     // 이동할 위도 경도 위치를 생성합니다 
-        //     var moveLatLon = new kakao.maps.LatLng(state[0].clickLocationsX, state[0].clickLocationsY);
-                
-        //     // 지도 중심을 부드럽게 이동시킵니다
-        //     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-        //     map.panTo(moveLatLon);             
-        // }       
-        // // /////////////////////////////
-        // // 테스트라는 변수에 함수를 보냄
-        // // dispatch({type: '테스트', payload: {func: panTo()}});
-        // ////////////////////////////////
-        
-        // testBtn.addEventListener('click', function(){
-        //     panTo();
-        // })
         // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
         map = new kakao.maps.Map(mapContainer, mapOption);
         // 위치 찾기 버튼을 누르면 spinner 생성.
@@ -99,6 +81,31 @@ function KakaoMap(){
             searchAddrFromCoords(map.getCenter(), displayCenterInfo);
         });
     }, [])
+
+    useEffect(() => {
+        console.log(props.test);
+        setCount(props.test);
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+        mapOption = { 
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+        };
+        // let test5 = state[1].x;
+        // console.log('x', test5[0]);
+        // console.log('y', state[1].y);
+        var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+        function panTo() {
+            // 이동할 위도 경도 위치를 생성합니다 
+            var moveLatLon = new kakao.maps.LatLng(33.450580, 126.574942);
+            
+            // 지도 중심을 부드럽게 이동시킵니다
+            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+            map.panTo(moveLatLon);            
+        }
+    }, [props.test])
+
+
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
     function reload(){
         localStorage.removeItem('search');
@@ -107,6 +114,16 @@ function KakaoMap(){
 
     // 내 위치 찾아주는 함수
     function mapReset(latitude, longitude){
+        // 바뀔 좌표 위, 경도
+        let changeX = [];
+        let changeY = [];
+        if(props.count !== 0){
+            panTo();
+            console.log('Wow');
+            console.log('변경', state[1].x);
+        }
+
+
         // 화면이 띄워지면 spinner 제거.
         spinnerChange(false);
         mapOption = { 
@@ -169,9 +186,6 @@ function KakaoMap(){
 
         // 지동 이동시키기
         function panTo() {
-            // 바뀔 좌표 위, 경도
-            let changeX = [];
-            let changeY = [];
             changeX.push(state[1].x);
             changeY.push(state[1].y);
             // 이동할 위도 경도 위치를 생성합니다 
@@ -184,12 +198,6 @@ function KakaoMap(){
         count = state[1].hospitalCount;
         console.log('test', state[1].x[count], state[1].y[count], count);
         // count = 0;
-        if(count !== 0){
-            panTo();
-            console.log('Wow');
-            console.log('변경', state[1].hospitalCount);
-            clearInterval(interval);
-        }
         // }, 1000)
     }
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
@@ -228,7 +236,13 @@ function KakaoMap(){
                     for (var i=0; i<data.length; i++) {
                         displayMarker(data[i]);    
                         bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-                    }       
+                    }     
+                    setCount(state[1].hospitalCount)
+                    console.log('count', count)  ;
+                    if(count != state[1].hospitalCount){
+                        console.log('변경된 x좌표는? : ', state[1].x[count]);
+                        console.log('변경된 y좌표는? : ', state[1].y[count]);
+                    }
 
                     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
                     map.setBounds(bounds);

@@ -25,6 +25,16 @@ function HospitalLocation(){
     let state = useSelector(state => state);
     let dispatch = useDispatch();
 
+    let [test, setTest] = useState(5);
+
+    const counts = (value) => {
+        setTest(value);
+    }
+    // function propsCount(value){
+    //     test = value
+    //     console.log(value);
+    // }
+
     // enter 키 이벤트 (enter키를 누르면 검색이 실행된다.)
     const onkeyPress = e => {
         if(e.key == 'Enter'){
@@ -40,10 +50,6 @@ function HospitalLocation(){
             console.log('검색 결과', data[0].kakaoMapSearch);
         }
     }
-    // function inputSend(input){
-    //     console.log('input', input);
-    //     console.log('검색 결과', state[2].search);
-    // }
     function clickBtn(e){
         let searchBtn = document.querySelector('.btn');
         let search = document.querySelector('.search');
@@ -83,15 +89,16 @@ function HospitalLocation(){
                     </div>
                 </div> */}
                 <section className="section">
-                    <KakaoMap/>
+                    <KakaoMap test={test}/>
                     {/* input 값을 props로 보내기. */}
-                    <HospitalInformation data={a}/>
+                    <HospitalInformation propsCount={counts}/>
                 </section>
                 <button className='backBtn'>
                     <Link to="/">
                         뒤로가기
                     </Link>
                 </button>
+                <button>{test}</button>
             </div>
         </main>
     )

@@ -30,7 +30,6 @@ function reducer(state = defaultState, action){
     copy[0].clickLocationsX = action.payload.x;
     copy[0].clickLocationsY = action.payload.y;
   }else if(action.type === '병원정보'){
-    // 바로 아래처럼 수정하기.
     copy[1].hospital.push(action.payload.hospital);
     copy[1].setAddress = action.payload.address;
     copy[1].x.push(action.payload.x);

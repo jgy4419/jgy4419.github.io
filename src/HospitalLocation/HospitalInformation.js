@@ -49,19 +49,20 @@ function HospitalInformation(props){
             names.push(hospitalName[i].innerHTML);
             hospitalInformationBox[i].addEventListener('click', function(){
                 // 클릭 할 때마다 count 증가되는거..? 고치기.
-                console.log(hospitalName[i].innerHTML);
+                console.log(hospitalName[i] + '', i);
                 // 클릭한 list의 배열 위치를 찾아서 넣어주기.
-                let hospitalCount = names.indexOf(`${hospitalName[i].innerHTML}`);
-                // if(hospitalCount === 0 || hospitalCount !== 0){
-                    dispatch({type: '병원정보', payload:{
-                        count: hospitalCount,
-                    }})
-                    console.log('wow2')
-                // }
-                console.log(hospitalCount);
+                // let hospitalCount = names.indexOf(`${hospitalName[i].innerHTML}`);
+                // // if(hospitalCount === 0 || hospitalCount !== 0){
+                //     dispatch({type: '병원정보', payload:{
+                //         count: hospitalCount,
+                //     }})
+                // // }
+                console.log('props는', props);
+                props.propsCount(i);
+                // props.propsCount(1);
             });
         }
-        console.log(names)
+        // console.log(names)
         // console.log('redux', state[1].hospitalCount);
     }
     return(
