@@ -25,7 +25,7 @@ function HospitalLocation(){
     let state = useSelector(state => state);
     let dispatch = useDispatch();
 
-    let [test, setTest] = useState(5);
+    let [test, setTest] = useState(0);
 
     const counts = (value) => {
         setTest(value);
