@@ -30,23 +30,11 @@ function HospitalLocation(){
     const counts = (value) => {
         setTest(value);
     }
-    // function propsCount(value){
-    //     test = value
-    //     console.log(value);
-    // }
 
     // enter 키 이벤트 (enter키를 누르면 검색이 실행된다.)
     const onkeyPress = e => {
         if(e.key == 'Enter'){
-            // searchData();
-            // console.log(e.target.value)
-            // console.log('변수', inputValue);
-            
-            // inputSend(e.target.value);
             data[0].kakaoMapSearch = e.target.value;
-            // dispatch({type: '검색', payload: {
-            //     sendInput: inputValue,
-            // }})
             console.log('검색 결과', data[0].kakaoMapSearch);
         }
     }
@@ -60,45 +48,24 @@ function HospitalLocation(){
             }})
         })
     }
+    // Main 페이지로 이동하는 함수 따로 만들어주기.(이렇게 안하면 다시 kakaomap 페이지 이동 시 내 위치 검색이 안됨.)
+    function urlMain(){
+        location.href = '/';
+    }
     return(
         <main>
             <div className="inner">
-                {/* <div className="searchBox">
-                    <div className="searchBox">
-                        <input className="search" placeholder="Search" type="text"
-                        onKeyPress={onkeyPress}
-                        onChange={onChange}/>
-                        <button className="btn"
-                        onClick={clickBtn}
-                        >검색</button>
-                    </div>
-                </div> */}
                 <hr className="line"/>
                 <div>
-                {/* <p>{inputValue}</p> */}
                 </div>
-                {/* <div className="list">
-                    <div>
-                    {
-                        list.map((i) => {
-                            return(
-                                <button>{i}</button>
-                            )
-                        })
-                    }
-                    </div>
-                </div> */}
                 <section className="section">
                     <KakaoMap test={test}/>
                     {/* input 값을 props로 보내기. */}
                     <HospitalInformation propsCount={counts}/>
                 </section>
-                <button className='backBtn'>
-                    <Link to="/">
-                        뒤로가기
-                    </Link>
+                <button onClick={urlMain} className='backBtn'>
+                    뒤로가기
                 </button>
-                <button>{test}</button>
             </div>
         </main>
     )

@@ -76,43 +76,12 @@ function KakaoMap(props){
                 alert('GPS를 지원하지 않습니다.');
                 reject('실패');
             }
-            // allLocation();
         })
         // 중심 좌표나 확대 수준이 변경됐을 때 지도 중심 좌표에 대한 주소 정보를 표시하도록 이벤트를 등록합니다
         kakao.maps.event.addListener(map, 'idle', function() {
             searchAddrFromCoords(map.getCenter(), displayCenterInfo);
         });
     }, [])
-
-    // 클릭 시 지도 이동시켜주는 기능,,
-    // useEffect(() => {
-    //     if(props.test !== 0 || props.test === 0){
-    //         return new Promise((resolve, reject) => {
-    //             // resolve(panTo(testY[props.test], testX[props.test]));
-    //             resolve(testFunc(testY[props.test], testX[props.test]));
-    //         })
-    //     }
-    // }, [props.test])
-
-    
-    // function testFunc(x, y){
-    //     // console.log(parseFloat(x), parseFloat(y));
-    //     mapOption = { 
-    //         // 내 위치
-    //         center: new kakao.maps.LatLng(x, y), // 지도의 중심좌표
-    //         level: 3 // 지도의 확대 레벨
-    //     };
-    //     map = new kakao.maps.Map(mapContainer, mapOption);
-    //         // panTo 적용 자체가 안됨. 지도가 이동하면 중심좌표 기준으로만 변경됨..
-    //     function panTo() {
-    //         // 이동할 위도 경도 위치를 생성합니다 
-    //         var moveLatLon = new kakao.maps.LatLng(parseFloat(y), parseFloat(x));
-            
-    //         // 지도 중심을 부드럽게 이동시킵니다
-    //         // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-    //         prototype.map.panTo(moveLatLon);            
-    //     }  
-    // }
 
 
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
@@ -167,7 +136,7 @@ function KakaoMap(props){
         function searchAddrFromCoords(coords, callback) {
             // 좌표로 행정동 주소 정보를 요청합니다
             geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
-        }
+        };
         // 카운트가 10이 아니면 여기 수정하기..
         let beforeCount;
             setInterval(() => {
@@ -229,18 +198,15 @@ function KakaoMap(props){
                     map.setBounds(bounds);
                 } 
             }
-                // 지도에 마커를 표시하는 함수입니다
+            // 지도에 마커를 표시하는 함수입니다
             function displayMarker(place) {
                 // 마커를 생성하고 지도에 표시합니다
                 var marker = new kakao.maps.Marker({
                     map: map,
                     position: new kakao.maps.LatLng(place.y, place.x) 
                 });
-                // 병원 데이터들을 redux로 넣어주는 부분.
-                // 나중에 추가적으로 좌표 작업하기.
-                // place.x는 x좌표, place.y는 y좌표.
                 dispatch({type: '병원정보', payload: {
-                    hospital: place, address: changeInfoDiv, x: place.x, y: place.y
+                    hospital: place, address: changeInfoDiv,
                 }})
                 // 일단 이렇게 값 넣어주기.
                 testX.push(place.x);
@@ -269,15 +235,14 @@ function KakaoMap(props){
                     ? (<Spinner/>)
                     : null
                 }
+                                <div className="hAddr">
+                    <span className="title">내 위치</span>
+                    <span id="centerAddr"/>
+                </div>
                 <div className="btn">
                     <button onClick={
                         reload
                     }>내 위치</button>
-                    <button className="testBtn">병원 찾기</button>
-                </div>
-                <div className="hAddr">
-                    <span className="title">내 위치 </span>
-                    <span id="centerAddr"></span>
                 </div>
             </div>
         </div>

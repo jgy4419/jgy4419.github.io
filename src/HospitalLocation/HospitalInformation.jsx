@@ -39,13 +39,13 @@ function HospitalInformation(props){
                 setSpinner(false);
             }
             let hospitalInformationBox = document.querySelectorAll('.hospitalInformationBox');
-        for(let i = 0; i < hospitalInformationBox.length; i++){
-            hospitalInformationBox[i].addEventListener('click', function(){
-                // 클릭 할 때마다 count 증가되는거..? 고치기.
-                localStorage.setItem('count', i);
-                // props.propsCount(1);
-            });
-        }
+            for(let i = 0; i < hospitalInformationBox.length; i++){
+                hospitalInformationBox[i].addEventListener('click', function(){
+                    // 클릭 할 때마다 count 증가되는거..? 고치기.
+                    localStorage.setItem('count', i);
+                    // props.propsCount(1);
+                });
+            }
         }, 1000);
     }, [])
     // 클릭한 병원
@@ -58,8 +58,6 @@ function HospitalInformation(props){
                 // props.propsCount(1);
             });
         }
-        // console.log(names)
-        // console.log('redux', state[1].hospitalCount);
     }
     return(
         <div className="container">
