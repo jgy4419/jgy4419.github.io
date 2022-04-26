@@ -17,6 +17,7 @@ function Main(){
     useEffect(() => {
         // 메인 페이지로 돌아오면 로컬스토리지 안에 search 값을 없애준다.
         localStorage.removeItem('search');
+        localStorage.removeItem('count');
         pageLoding();
     })
     function pageLoding(){

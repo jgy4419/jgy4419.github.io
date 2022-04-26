@@ -84,58 +84,35 @@ function KakaoMap(props){
         });
     }, [])
 
-    useEffect(() => {
-        mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-        mapOption = { 
-            center: new kakao.maps.LatLng(testY[props.test], testX[props.test]), // 지도의 중심좌표
-            level: 3 // 지도의 확대 레벨
-        };
-        // var map = new kakao.maps.Map(mapContainer, mapOption); 
-        console.log(props.test);
-        function panTo() {
-            console.log('////');
-            // 이동할 위도 경도 위치를 생성합니다 
-            var moveLatLon = new kakao.maps.LatLng(testY[props.test], testX[props.test]);
-            
-            // 지도 중심을 부드럽게 이동시킵니다
-            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-            map.panTo(moveLatLon);            
-        }
-        // return new Promise((resolve, reject) => {
-        //     // if(navigator.geolocation){
-        //     //     navigator.geolocation.getCurrentPosition(function(position){
-        //             if(props.test === 0 || props.test !== 0){
-        //                 console.log(testX[props.test]);
-        //                 console.log(testY[props.test]);
-        //                 // resolve(displayCenterInfo(0, 0, testX[props.test], testY[props.test]));
-        //             }
-        //         // })
-        //     // }
-        // })
-    }, [props.test])
-
-
+    // 클릭 시 지도 이동시켜주는 기능,,
+    // useEffect(() => {
+    //     if(props.test !== 0 || props.test === 0){
+    //         return new Promise((resolve, reject) => {
+    //             // resolve(panTo(testY[props.test], testX[props.test]));
+    //             resolve(testFunc(testY[props.test], testX[props.test]));
+    //         })
+    //     }
+    // }, [props.test])
 
     
-    function testFunc(x, y){
-        console.log(parseFloat(x), parseFloat(y));
-        mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-            mapOption = { 
-                center: new kakao.maps.LatLng(parseFloat(y), parseFloat(x)), // 지도의 중심좌표
-                level: 3 // 지도의 확대 레벨
-            };
-
-        map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-
-        function panTo() {
-            // 이동할 위도 경도 위치를 생성합니다 
-            var moveLatLon = new kakao.maps.LatLng(parseFloat(y), parseFloat(x));
+    // function testFunc(x, y){
+    //     // console.log(parseFloat(x), parseFloat(y));
+    //     mapOption = { 
+    //         // 내 위치
+    //         center: new kakao.maps.LatLng(x, y), // 지도의 중심좌표
+    //         level: 3 // 지도의 확대 레벨
+    //     };
+    //     map = new kakao.maps.Map(mapContainer, mapOption);
+    //         // panTo 적용 자체가 안됨. 지도가 이동하면 중심좌표 기준으로만 변경됨..
+    //     function panTo() {
+    //         // 이동할 위도 경도 위치를 생성합니다 
+    //         var moveLatLon = new kakao.maps.LatLng(parseFloat(y), parseFloat(x));
             
-            // 지도 중심을 부드럽게 이동시킵니다
-            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-            map.panTo(moveLatLon);            
-        }    
-    }
+    //         // 지도 중심을 부드럽게 이동시킵니다
+    //         // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+    //         prototype.map.panTo(moveLatLon);            
+    //     }  
+    // }
 
 
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
@@ -149,8 +126,6 @@ function KakaoMap(props){
         // 화면이 띄워지면 spinner 제거.
         spinnerChange(false);
         mapOption = { 
-            // test 위치
-            center: new kakao.maps.LatLng(36.99196502823086, 127.92563283606664),
             // 내 위치
             center: new kakao.maps.LatLng(state[0].clickLocationsX, state[0].clickLocationsY), // 지도의 중심좌표
             level: 3 // 지도의 확대 레벨
@@ -173,18 +148,7 @@ function KakaoMap(props){
         // 마커가 표시될 위치
         var markerPosition  = new kakao.maps.LatLng(latitude, longitude),
             markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption); 
-        function makeOverListener(map, marker, infowindow) {
-            return function() {
-                infowindow.open(map, marker);
-            };
-        }
         
-        // 인포윈도우를 닫는 클로저를 만드는 함수입니다 
-        function makeOutListener(infowindow) {
-            return function() {
-                infowindow.close();
-            };
-        }
         let customOverlay = new kakao.maps.CustomOverlay({
             map: map,
             position: markerPosition,
@@ -204,28 +168,25 @@ function KakaoMap(props){
             // 좌표로 행정동 주소 정보를 요청합니다
             geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
         }
-
-        console.log('//');
-        console.log(props.test);
-        console.log(testY[props.test]);
-        console.log(testX[props.test]);
-        // function panTo(x, y) {
-        //     console.log('////');
-        //     // 이동할 위도 경도 위치를 생성합니다 
-        //     var moveLatLon = new kakao.maps.LatLng(x, y);
+        // 카운트가 10이 아니면 여기 수정하기..
+        let beforeCount;
+            setInterval(() => {
+                if(localStorage.getItem('count') !== beforeCount) {
+                    beforeCount = localStorage.getItem('count');
+                    console.log(typeof localStorage.getItem('count').value);
+                    // 밑의 console 지우면.. 안됨..?
+                    panTo(testY[localStorage.getItem('count')], testX[localStorage.getItem('count')]);
+                }
+            }, 1000);
+        
+        function panTo(x, y) {
+            // 이동할 위도 경도 위치를 생성합니다 
+            var moveLatLon = new kakao.maps.LatLng(x, y);
             
-        //     // 지도 중심을 부드럽게 이동시킵니다
-        //     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-        //     map.panTo(moveLatLon);            
-        // }
-
-        // return new Promise((resolve, reject) => {
-        //     setInterval(() => {
-        //         if(props.test === 0){
-        //             resolve(panTo(testY[props.test], testX[props.test]));
-        //         }
-        //     }, 1000);
-        // })  
+            // 지도 중심을 부드럽게 이동시킵니다
+            // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
+            map.panTo(moveLatLon);            
+        }
     }
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
     function displayCenterInfo(result, status) {
@@ -250,7 +211,6 @@ function KakaoMap(props){
             }
             // 메인페이지의 input에(로컬스토리지에) 값이 들어가 있으면 그 값 기준으로 병원 검색.
             if(localStorage.getItem('search') !== ''){
-                console.log('!!');
                 ps.keywordSearch(`${localStorage.getItem('search')} 병원`, placesSearchCB);
             }
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
@@ -261,7 +221,7 @@ function KakaoMap(props){
                     // LatLngBounds 객체에 좌표를 추가합니다
                     var bounds = new kakao.maps.LatLngBounds();
 
-                    for (var i=0; i<data.length; i++) {
+                    for (var i = 0; i < data.length; i++) {
                         displayMarker(data[i]);    
                         bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
                     }    
@@ -269,7 +229,6 @@ function KakaoMap(props){
                     map.setBounds(bounds);
                 } 
             }
-
                 // 지도에 마커를 표시하는 함수입니다
             function displayMarker(place) {
                 // 마커를 생성하고 지도에 표시합니다
@@ -317,7 +276,7 @@ function KakaoMap(props){
                     <button className="testBtn">병원 찾기</button>
                 </div>
                 <div className="hAddr">
-                    <span className="title">내 위치 : </span>
+                    <span className="title">내 위치 </span>
                     <span id="centerAddr"></span>
                 </div>
             </div>

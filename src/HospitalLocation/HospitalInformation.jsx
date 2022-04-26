@@ -38,27 +38,23 @@ function HospitalInformation(props){
                 clearInterval(interval);
                 setSpinner(false);
             }
+            let hospitalInformationBox = document.querySelectorAll('.hospitalInformationBox');
+        for(let i = 0; i < hospitalInformationBox.length; i++){
+            hospitalInformationBox[i].addEventListener('click', function(){
+                // 클릭 할 때마다 count 증가되는거..? 고치기.
+                localStorage.setItem('count', i);
+                // props.propsCount(1);
+            });
+        }
         }, 1000);
     }, [])
     // 클릭한 병원
     function clickHospital(){
         let hospitalInformationBox = document.querySelectorAll('.hospitalInformationBox');
-        let hospitalName = document.querySelectorAll('.name');
-        let names = [];
         for(let i = 0; i < hospitalInformationBox.length; i++){
-            names.push(hospitalName[i].innerHTML);
             hospitalInformationBox[i].addEventListener('click', function(){
                 // 클릭 할 때마다 count 증가되는거..? 고치기.
-                console.log(hospitalName[i] + '', i);
-                // 클릭한 list의 배열 위치를 찾아서 넣어주기.
-                // let hospitalCount = names.indexOf(`${hospitalName[i].innerHTML}`);
-                // // if(hospitalCount === 0 || hospitalCount !== 0){
-                //     dispatch({type: '병원정보', payload:{
-                //         count: hospitalCount,
-                //     }})
-                // // }
-                console.log('props는', props);
-                props.propsCount(i);
+                localStorage.setItem('count', i);
                 // props.propsCount(1);
             });
         }
@@ -72,7 +68,7 @@ function HospitalInformation(props){
                     hospital.map(i => {
                         return(
                             <div className="list">
-                                <div className="hospitalInformationBox" onClick={clickHospital}>
+                                <div class="hospitalInformationBox">
                                     <p className = "name">{i.place_name}</p>
                                     <p className = "tel">{i.phone}</p>
                                     <p className = "address">{i.road_address_name}</p>
