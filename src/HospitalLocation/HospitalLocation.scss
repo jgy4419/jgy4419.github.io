@@ -3,36 +3,12 @@ main{
         width: 80%;
         height: 100vh;
         margin: auto;
-        .searchBox{
-            margin-top: 2%;
-            .line{
-                width: 100px;
-                height: 30px;
-            }
-            .search{
-                width: 50%;
-                height: 40px;
-                border-radius: 10px 0px 0px 10px;
-                border: 1px solid #333;
-                padding-left: 10px;
-                font-size: 15px;
-            }
-            .btn{
-                width: 50px;
-                height: 35px;
-                margin-bottom: 5px;
-                font-weight: 900;
-                border: 0px;
-                border-radius: 10px;
-                box-sizing: content-box;
-                font-size: 15px;
-                font-weight: 700;
-                background-color: rgb(255, 211, 154);
-                color: #fff;
-            }
-        }
         .section{
-            display: flex;
+            display: block;
+            margin-top: 20px;
+            .kakaoMap{
+                margin-top: -20px;
+            }
         }
         .list{
             width: 100%;

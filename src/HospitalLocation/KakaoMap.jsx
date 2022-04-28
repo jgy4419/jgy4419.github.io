@@ -175,11 +175,9 @@ function KakaoMap(props){
             // 장소 검색 객체를 생성합니다
             var ps = new kakao.maps.services.Places();
             // 내 위치에 주소가 있으면 내 위치 주변의 병원이 검색.
-            if(state[2].search === ''){
+            if(localStorage.getItem('search') === null){
                 ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
-            }
-            // 메인페이지의 input에(로컬스토리지에) 값이 들어가 있으면 그 값 기준으로 병원 검색.
-            if(localStorage.getItem('search') !== ''){
+            }else if(localStorage.getItem('search') !== ''){
                 ps.keywordSearch(`${localStorage.getItem('search')} 병원`, placesSearchCB);
             }
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
@@ -235,14 +233,14 @@ function KakaoMap(props){
                     ? (<Spinner/>)
                     : null
                 }
-                                <div className="hAddr">
-                    <span className="title">내 위치</span>
-                    <span id="centerAddr"/>
-                </div>
                 <div className="btn">
                     <button onClick={
                         reload
                     }>내 위치</button>
+                </div>
+                <div className="hAddr">
+                    <span className="title">내 위치</span>
+                    <span id="centerAddr"/>
                 </div>
             </div>
         </div>

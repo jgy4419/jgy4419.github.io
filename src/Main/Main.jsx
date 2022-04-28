@@ -37,7 +37,7 @@ function Main(){
         }
     }
     return(
-        <>
+        <div>
             <div className='inner'>
                 <p className="title">병원을 찾는 <br/> 가장 빠른 방법.</p>
                     <div className='contain'>
@@ -60,7 +60,7 @@ function Main(){
                         </div>
                     </div>
             </div>
-        </>
+        </div>
     )
 }
 export default Main;

@@ -59,7 +59,7 @@ function HospitalLocation(){
                 <div>
                 </div>
                 <section className="section">
-                    <KakaoMap test={test}/>
+                    <KakaoMap test={test} className="kakaoMap"/>
                     {/* input 값을 props로 보내기. */}
                     <HospitalInformation propsCount={counts}/>
                 </section>
