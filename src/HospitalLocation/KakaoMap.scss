@@ -1,6 +1,6 @@
 #map{
     position: relative;
-    width: 80vw;
+    width: 50vw;
     height: 30vh;
     z-index: 1;
     border-radius: 10px;
@@ -37,6 +37,9 @@
         }
     }
 }
+#map.mapSize{
+    height: 60vh;
+}
 
 // kakaoMap
 .myLocation{
@@ -56,4 +59,13 @@
     font-size: 13px;
     font-weight: 700;
     text-align: center;
+}
+
+@media screen and (max-width: 800px){
+    #map{
+        // width: 70vw;
+        // left: 0;
+        // right: 0;
+        // margin: auto;
+    }
 }
