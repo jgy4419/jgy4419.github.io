@@ -33,8 +33,14 @@ function Main(){
             // 검색 결과를 localStorage에 저장 시키기.
             localStorage.setItem('search', e.target.value);
             // url 변경시켜주기.
-            window.location.href = '/hospital';
+            location.href = '/hospital';
         }
+
+        const searchBtn = document.querySelector('.searchBtn');
+        searchBtn.addEventListener('click', function(){
+            localStorage.setItem('search', e.target.value);
+        })
+        
     }
     return(
         <div>
@@ -45,6 +51,7 @@ function Main(){
                             <p className='title1'>어떤 <i className="fa fas fa-hospital"/>을 <br/>찾으세요?</p>
                             <div className='searchBox'>
                                 <input onKeyPress={onKeyPress} className = 'search' placeholder='병원 이름을 입력해주세요!'/>
+                                <Link to="/hospital"><button class="searchBtn">이동</button></Link>
                             </div>
                         </div>
                         <div className='item'>

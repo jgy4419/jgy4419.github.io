@@ -32,6 +32,7 @@ main{
             }
         }
         .backBtn{
+            margin-top: 10px;
             font-size: 14px;
             font-weight: 700;
             width: 80px;
@@ -43,6 +44,16 @@ main{
         .backBtn{
             color: rgb(255, 255, 255);
             text-decoration: none;
+        }
+    }
+    @media screen and (max-width: 800px){
+        .inner{
+            width: 80%;
+        }
+    }
+    @media screen and (max-height: 400px){
+        .inner{
+            margin-top: 10%;
         }
     }
 }

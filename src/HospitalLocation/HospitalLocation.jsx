@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // JSON 파일 서버 : npx json-server ./data.json(저장한 파일명) --watch --port 8080
 
 function HospitalLocation(){
-    let [list, listChange] = useState(['전체', '연수동', '연수동', '대소원', '호암동', '교현동', '지현동', '칠금동'])
+    // let [list, listChange] = useState(['전체', '연수동', '연수동', '대소원', '호암동', '교현동', '지현동', '칠금동']);
     let [inputValue, setInputValue] = useState('');
     let [a, setA] = useState([]);
     const onChange = (e) => {

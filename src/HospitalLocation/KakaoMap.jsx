@@ -210,7 +210,7 @@ function KakaoMap(props){
                 testX.push(place.x);
                 testY.push(place.y);
                 // 마커에 클릭이벤트를 등록합니다
-                kakao.maps.event.addListener(marker, 'mouseover', function() {
+                kakao.maps.event.addListener(marker, 'click', function() {
                     // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
                     infowindow.setContent(`<div style=
                         "padding:5px;

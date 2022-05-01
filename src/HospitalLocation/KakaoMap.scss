@@ -63,9 +63,17 @@
 
 @media screen and (max-width: 800px){
     #map{
-        // width: 70vw;
+        width: 80vw;
         // left: 0;
         // right: 0;
         // margin: auto;
+    }
+}
+@media screen and (max-height: 400px){
+    #map{
+        height: 200px;
+    }
+    #map.mapSize{
+        height: 300px;
     }
 }
