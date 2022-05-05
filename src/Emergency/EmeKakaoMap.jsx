@@ -137,17 +137,6 @@ function KakaoMap(props){
             // 좌표로 행정동 주소 정보를 요청합니다
             geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
         };
-        // 카운트가 10이 아니면 여기 수정하기..
-        let beforeCount;
-            setInterval(() => {
-                if(localStorage.getItem('count') !== beforeCount) {
-                    beforeCount = localStorage.getItem('count');
-                    console.log(typeof localStorage.getItem('count').value);
-                    // 밑의 console 지우면.. 안됨..?
-                    panTo(testY[localStorage.getItem('count')], testX[localStorage.getItem('count')]);
-                }
-            }, 1000);
-        
         function panTo(x, y) {
             // 이동할 위도 경도 위치를 생성합니다 
             var moveLatLon = new kakao.maps.LatLng(x, y);
@@ -159,7 +148,6 @@ function KakaoMap(props){
     }
     // 지도 좌측상단에 지도 중심좌표에 대한 주소정보를 표출하는 함수입니다
     function displayCenterInfo(result, status) {
-        /// 여기까지
         var infowindow = new kakao.maps.InfoWindow({zIndex:1});
         if (status === kakao.maps.services.Status.OK) {
             // infoDiv의 innerHTML 값을 전송
@@ -174,12 +162,7 @@ function KakaoMap(props){
             changeInfoDiv = infoDiv.innerHTML;
             // 장소 검색 객체를 생성합니다
             var ps = new kakao.maps.services.Places();
-            // 내 위치에 주소가 있으면 내 위치 주변의 병원이 검색.
-            if(localStorage.getItem('search') === null){
-                ps.keywordSearch(`${changeInfoDiv} 병원`, placesSearchCB); 
-            }else if(localStorage.getItem('search') !== ''){
-                ps.keywordSearch(`${localStorage.getItem('search')} 병원`, placesSearchCB);
-            }
+            
             // 키워드 검색 완료 시 호출되는 콜백함수 입니다
             function placesSearchCB (data, status, pagination) {
                 if (status === kakao.maps.services.Status.OK) {

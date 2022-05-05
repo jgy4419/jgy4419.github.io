@@ -11,12 +11,13 @@ import { BrowserRouter } from 'react-router-dom';
 
 import {Provider} from 'react-redux'
 import { createStore } from 'redux';
-import { combineReducers } from 'redux';
 
 let defaultState = [
   {myLocationX: 0, myLocationY: 0, hospitalName: ''},
   {hospital: [], setAddress: '', x: [], y: [], hospitalCount: 0},
-  {search: '', mainSearch: '', test: ''}
+  // {search: '', mainSearch: '', test: ''},
+  // 상태가 0이면 내 위치 근처 지도 찾아주는 기능 넣기 1이면 응급실 찾아주는 기능 넣기
+  {mapState: 0}
 ]
 
 function reducer(state = defaultState, action){
@@ -35,9 +36,8 @@ function reducer(state = defaultState, action){
     copy[1].x.push(action.payload.x);
     copy[1].y.push(action.payload.y);
     copy[1].hospitalCount = action.payload.count;
-  }else if(action.type === '검색'){
-    copy[2].search = action.payload.sendInput;
-    copy[2].mainSearch = action.payload.mainInput;
+  }else if(action.type === '지도기능'){
+    copy[2].mapState = action.payload.mapState
   }else{
     return state;
   }
