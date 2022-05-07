@@ -2,8 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import './Emergency.scss'
 import EmeKakaoMap from './EmeKakaoMap';
-import HospitalInformation from '../HospitalLocation/HospitalInformation'
-// import KakaoMap from '../HospitalLocation/KakaoMap';
+import EmergencyList from './EmergencyList';
 
 function Emergency(){
     let dispatch = useDispatch();
@@ -15,7 +14,7 @@ function Emergency(){
         console.log(state[2].mapState);
     }, [])
     return(
-        <>
+        <div className="contain">
             <div className="inner">
                 <hr className="line"/>
                 <div>
@@ -23,13 +22,13 @@ function Emergency(){
                 <section className="section">
                     <EmeKakaoMap/>
                     {/* input 값을 props로 보내기. */}
-                    <HospitalInformation/>
+                    <EmergencyList/>
                 </section>
                 {/* <button onClick={urlMain} className='backBtn'>
                     뒤로가기
                 </button> */}
             </div>
-        </>
+        </div>
     )
 }
 

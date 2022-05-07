@@ -4,7 +4,7 @@
 import axios from 'axios';
 import React, {useState, useEffect, Component} from 'react';
 import Spinner from '../Spinner';
-import './KakaoMap.scss'
+import './EmeKakaoMap.scss'
 
 import data from '../data/test.json';
 
@@ -155,6 +155,19 @@ function KakaoMap(props){
             for(var i = 0; i < result.length; i++) {
                 // 행정동의 region_type 값은 'H' 이므로
                 if (result[i].region_type === 'H') {
+                    axios.post('url', {
+                        // 내 주소, x좌표, y좌표 보내주기.
+                        myLocation: result[i].address_name,
+                        locationX: state[0].clickLocationsX,
+                        locationY: state[0].clickLocationsY
+                    })
+                    .then(res => {
+                        console.log(res);
+                        // 백엔드 한테 주소나, 좌표를 보내준 뒤 결과를 받기. 받은 결과를 리스트에 띄우기
+                        
+                    })
+                    .catch(err => {console.log(res);})
+                    console.log(result[i].address_name);
                     infoDiv.innerHTML = result[i].address_name;
                     break;
                 }
@@ -172,7 +185,7 @@ function KakaoMap(props){
                     var bounds = new kakao.maps.LatLngBounds();
 
                     for (var i = 0; i < data.length; i++) {
-                        displayMarker(data[i]);    
+                        displayMarker(data[i]);
                         bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
                     }    
                     // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
@@ -186,9 +199,6 @@ function KakaoMap(props){
                     map: map,
                     position: new kakao.maps.LatLng(place.y, place.x) 
                 });
-                dispatch({type: '병원정보', payload: {
-                    hospital: place, address: changeInfoDiv,
-                }})
                 // 일단 이렇게 값 넣어주기.
                 testX.push(place.x);
                 testY.push(place.y);

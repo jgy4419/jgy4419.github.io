@@ -1,0 +1,67 @@
+.contain{
+    position: relative;
+    z-index: 1;
+    .list{
+        position: absolute;
+        left: 0;
+        top: 15%;
+        width: 80%;
+        height: 60vh;
+        border: 4px solid rgb(214, 214, 214);
+        border-radius: 10px;
+    }
+}
+.hospitalDetail{
+    .back{
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(#000, .3);
+    }
+    .information{
+        overflow-y: scroll;
+        position: fixed;
+        z-index: 100;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: 20px auto;
+        width: 50vw;
+        // height: 60vh;
+        .close{
+            padding: 20px;
+            color: #000;
+        }
+        .hospitalDetail{
+            background-color: rgb(255, 255, 255);
+            border-radius: 10px;
+            padding: 5%;
+        }
+        .hospitalDetail2{
+            margin-top: 10px;
+            padding: 20px;
+            border-radius: 10px;
+            height: 100vh;
+            background-color: rgb(255, 255, 255);
+            .hospitalModal{
+                display: flex;
+                justify-content: space-around;
+                li{
+                    font-size: 18px;
+                    font-weight: 700;
+                    cursor: pointer;
+                }
+            }
+            .hospitalDetail2Inner{
+                #map{
+                    width: 100%;
+                    height: 200px;
+                }
+            }
+        }
+    }
+}
