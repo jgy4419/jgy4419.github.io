@@ -141,6 +141,7 @@
 }
 .helpInformation{
     position: fixed;
+    z-index: 100;
     top: 0;
     margin: auto;
     display: none;
@@ -307,6 +308,9 @@
         .helpContain{
             width: 300px;
             margin-top: 20%;
+            img{
+                width: 150px;
+            }
             .title{
                 font-size: 30px;
             }

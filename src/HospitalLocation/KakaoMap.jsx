@@ -81,14 +81,21 @@ function KakaoMap(props){
         kakao.maps.event.addListener(map, 'idle', function() {
             searchAddrFromCoords(map.getCenter(), displayCenterInfo);
         });
+
+        // url hispory가 -1이면 재로딩
+        let unlisten = history.listen(location => {
+            if(history.action === 'POP'){
+                location.reload();
+            }
+        });
     }, [])
 
 
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
-    function reload(){
-        localStorage.removeItem('search');
-        window.location.reload();
-    }
+    // function reload(){
+    //     localStorage.removeItem('search');
+    //     window.location.reload();
+    // }
 
     // 내 위치 찾아주는 함수
     function mapReset(latitude, longitude){
@@ -137,16 +144,15 @@ function KakaoMap(props){
             // 좌표로 행정동 주소 정보를 요청합니다
             geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);         
         };
-        // 카운트가 10이 아니면 여기 수정하기..
         let beforeCount;
-            setInterval(() => {
-                if(localStorage.getItem('count') !== beforeCount) {
-                    beforeCount = localStorage.getItem('count');
-                    console.log(typeof localStorage.getItem('count').value);
-                    // 밑의 console 지우면.. 안됨..?
-                    panTo(testY[localStorage.getItem('count')], testX[localStorage.getItem('count')]);
-                }
-            }, 1000);
+        setInterval(() => {
+            if(localStorage.getItem('count') !== beforeCount) {
+                beforeCount = localStorage.getItem('count');
+                console.log(typeof localStorage.getItem('count').value);
+                // 밑의 console 지우면.. 안됨..?
+                panTo(testY[localStorage.getItem('count')], testX[localStorage.getItem('count')]);
+            }
+        }, 1000);
         
         function panTo(x, y) {
             // 이동할 위도 경도 위치를 생성합니다 
@@ -234,9 +240,7 @@ function KakaoMap(props){
                     : null
                 }
                 <div className="btn">
-                    <button onClick={
-                        reload
-                    }>내 위치</button>
+                    <button>내 위치</button>
                     <button className="mapSize"
                     onClick={
                         () => {

@@ -18,16 +18,38 @@ function EmergencyList(){
         };
         // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
         map = new kakao.maps.Map(mapContainer, mapOption);
-    }, [])
+    }, []);
     return(
         <>
             <div className="contain">
-                <div className="list">
-                    <div class="hospitalDetailBox" onClick={() => {setDetailState(1)}}>
-                        <p className = "name">이름</p>
-                        <p className = "tel">전화번호</p>
-                        <p className = "address">주소</p>
-                        <hr/>
+                <div className="settings">
+                    <div className="list">
+                        <div class="hospitalDetailBox" onClick={() => {setDetailState(1)}}>
+                            <p className = "name">이름</p>
+                            <p className = "tel">전화번호</p>
+                            <p className = "address">주소</p>
+                        </div>
+                    </div>
+                    <div className="list">
+                        <div class="hospitalDetailBox" onClick={() => {setDetailState(1)}}>
+                            <p className = "name">이름</p>
+                            <p className = "tel">전화번호</p>
+                            <p className = "address">주소</p>
+                        </div>
+                    </div>
+                    <div className="list">
+                        <div class="hospitalDetailBox" onClick={() => {setDetailState(1)}}>
+                            <p className = "name">이름</p>
+                            <p className = "tel">전화번호</p>
+                            <p className = "address">주소</p>
+                        </div>
+                    </div>
+                    <div className="list">
+                        <div class="hospitalDetailBox" onClick={() => {setDetailState(1)}}>
+                            <p className = "name">이름</p>
+                            <p className = "tel">전화번호</p>
+                            <p className = "address">주소</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -39,6 +61,12 @@ function EmergencyList(){
 export default EmergencyList;
 
 function HospitalDetail(props){
+    function activate({ target }){
+        let hospitalInformation = document.querySelector('.hospitalModal');
+        [...hospitalInformation.children].forEach(information => {
+            information.classList.toggle('active', information === target);
+        })
+    }
     if(props.detailState === 1){
         return(
             <div className="hospitalDetail">
@@ -61,7 +89,7 @@ function HospitalDetail(props){
                                 {
                                     ['병원정보', '진료정보'].map(e => {
                                         return(
-                                            <li>{e}</li>
+                                            <li onClick={activate}>{e}</li>
                                         )
                                     })  
                                 }

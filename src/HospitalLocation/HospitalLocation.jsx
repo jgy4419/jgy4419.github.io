@@ -17,7 +17,7 @@ function HospitalLocation(){
         dispatch({type: '지도기능', payload: {
             mapState: 0
         }})
-        console.log(state[2].mapState);
+        // console.log(state[2].mapState);
     }, [])
     // let [list, listChange] = useState(['전체', '연수동', '연수동', '대소원', '호암동', '교현동', '지현동', '칠금동']);
     let [inputValue, setInputValue] = useState('');
