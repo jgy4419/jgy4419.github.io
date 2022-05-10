@@ -61,6 +61,8 @@ function EmergencyList(){
 export default EmergencyList;
 
 function HospitalDetail(props){
+    let [hospitalInformation1, setHospitalInformation1] = useState(['병원이름', '전화번호', '상세주소']);
+
     function activate({ target }){
         let hospitalInformation = document.querySelector('.hospitalModal');
         [...hospitalInformation.children].forEach(information => {
@@ -80,9 +82,13 @@ function HospitalDetail(props){
                     }>X</p>
                     <div className="hospitalDetail">
                         <h1>병원 상세정보</h1><br/>
-                        <p className="name">병원이름</p>
-                        <p className='date'>진료 날짜</p>
-                        <p className='tel'>전화번호</p>
+                        {
+                            hospitalInformation1.map(information => {
+                                return(
+                                    <p className = "firstInformation">{information}: </p>
+                                )
+                            })
+                        }
                     </div>
                     <div className="hospitalDetail2">
                             <ul className="hospitalModal">
@@ -93,15 +99,25 @@ function HospitalDetail(props){
                                         )
                                     })  
                                 }
-                            </ul>
+                            </ul><br/><br/>
                             <div className="hospitalDetail2Inner">
-                                <h1>위치</h1>
+                                <h1 className="emergencyCall">응급실 연락처 : </h1>
                                 <br/>
-                                <p>병원 상세 주소</p>
-                                <p>진료 과목</p>
-                                <p className='distance'>병원까지의 거리</p>
-                                <div id="map">
-
+                                <h1>진료 시간</h1><br/>
+                                <div className="weekBox">
+                                {
+                                    ['월', '화', '수', '목', '금', '토', '일'].map(week => {
+                                        return(
+                                                <p className="week">{week}</p>
+                                        )
+                                    })
+                                }
+                                </div> <br/>
+                                <h1>진료 과목</h1><br/>
+                                <div className="diagnosisBox">
+                                    <p className="diagnosis">Test</p>
+                                    <p className="diagnosis">Test</p>
+                                    <p className="diagnosis">Test</p>
                                 </div>
                             </div>
                         </div>

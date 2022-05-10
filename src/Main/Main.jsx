@@ -6,13 +6,20 @@ import {Link, Route, Switch} from 'react-router-dom'
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import data from '../data/test.json'
+import axios from 'axios';
+
 // json 서버 열기 => npx json-server ./test.json --watch --port 8800
 function Main(){
     let state = useSelector(state => state);
     let [helpState, setHelpState] = useState(0);
     let dispatch = useDispatch();
     useEffect(() => {
+        // 데이터 불러오기
+        axios.get('https://localhost:8000/test/현대치과의원')
+        .then(res => console.log(res))
+        .catch(err => console.log(err));
+
+
         // 메인 페이지로 돌아오면 로컬스토리지 안에 search 값을 없애준다.
         localStorage.removeItem('search');
         localStorage.removeItem('count');

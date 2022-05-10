@@ -82,7 +82,7 @@ function KakaoMap(props){
             searchAddrFromCoords(map.getCenter(), displayCenterInfo);
         });
 
-        // url hispory가 -1이면 재로딩
+        // url hispory각 
         let unlisten = history.listen(location => {
             if(history.action === 'POP'){
                 location.reload();
@@ -92,10 +92,10 @@ function KakaoMap(props){
 
 
     // 사이트가 재로딩되면서 내 위치를 새로 잡아줌.
-    // function reload(){
-    //     localStorage.removeItem('search');
-    //     window.location.reload();
-    // }
+    function reload(){
+        localStorage.removeItem('search');
+        window.location.reload();
+    }
 
     // 내 위치 찾아주는 함수
     function mapReset(latitude, longitude){
@@ -240,7 +240,9 @@ function KakaoMap(props){
                     : null
                 }
                 <div className="btn">
-                    <button>내 위치</button>
+                    <button onClick={
+                        reload
+                    }>내 위치</button>
                     <button className="mapSize"
                     onClick={
                         () => {
