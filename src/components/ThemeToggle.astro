@@ -1,9 +1,10 @@
 ---
 // 다크/라이트 수동 토글. localStorage에 저장.
 // 기본값은 시스템 설정 (prefers-color-scheme) 따라감.
+// 같은 페이지에 여러 번 렌더링돼도 모두 동작하도록 data-attribute + querySelectorAll.
 ---
 
-<button id="theme-toggle" class="theme-toggle" type="button" aria-label="테마 전환">
+<button data-theme-toggle class="theme-toggle" type="button" aria-label="테마 전환">
 	<svg class="icon sun" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none">
 		<circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"></circle>
 		<path
@@ -42,35 +43,54 @@
 	.icon {
 		display: none;
 	}
-	:global([data-theme='light']) .theme-toggle .moon,
-	:global(html:not([data-theme='dark'])) .theme-toggle .moon {
-		display: block;
-	}
+	/* 명시적 테마가 설정된 경우 */
 	:global([data-theme='dark']) .theme-toggle .sun {
 		display: block;
 	}
-	:global([data-theme='light']) .theme-toggle .sun {
-		display: none;
+	:global([data-theme='light']) .theme-toggle .moon {
+		display: block;
+	}
+	/* 명시적 테마가 없을 때는 시스템 설정 따라감 */
+	@media (prefers-color-scheme: dark) {
+		:global(html:not([data-theme])) .theme-toggle .sun {
+			display: block;
+		}
+	}
+	@media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
+		:global(html:not([data-theme])) .theme-toggle .moon {
+			display: block;
+		}
 	}
 </style>
 
 <script is:inline>
 	(function () {
+		// 초기 로드 시 저장된 테마 복원 (FOUC 방지를 위해 최대한 일찍 실행)
 		const saved = localStorage.getItem('theme');
 		if (saved === 'dark' || saved === 'light') {
 			document.documentElement.setAttribute('data-theme', saved);
 		}
-		document.addEventListener('DOMContentLoaded', () => {
-			const btn = document.getElementById('theme-toggle');
-			if (!btn) return;
-			btn.addEventListener('click', () => {
-				const cur =
-					document.documentElement.getAttribute('data-theme') ||
-					(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-				const next = cur === 'dark' ? 'light' : 'dark';
-				document.documentElement.setAttribute('data-theme', next);
-				localStorage.setItem('theme', next);
+
+		function wireButtons() {
+			const buttons = document.querySelectorAll('[data-theme-toggle]');
+			buttons.forEach((btn) => {
+				if (btn.dataset.wired) return;
+				btn.dataset.wired = '1';
+				btn.addEventListener('click', () => {
+					const cur =
+						document.documentElement.getAttribute('data-theme') ||
+						(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+					const next = cur === 'dark' ? 'light' : 'dark';
+					document.documentElement.setAttribute('data-theme', next);
+					localStorage.setItem('theme', next);
+				});
 			});
-		});
+		}
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', wireButtons);
+		} else {
+			wireButtons();
+		}
 	})();
 </script>
