@@ -1,26 +1,47 @@
 ---
 // giscus 댓글 위젯.
-// https://giscus.app 에서 발급한 값들을 아래에 채워 넣으세요.
-// data-repo, data-repo-id, data-category, data-category-id 는 반드시 실제 값으로 교체되어야 합니다.
+// 1) 저장소 Settings → Features 에서 Discussions 활성화
+// 2) https://github.com/apps/giscus 에 가서 이 저장소에 giscus 앱 설치
+// 3) https://giscus.app 에서 저장소 입력 → data-repo-id, data-category-id 발급
+// 4) 아래 상수를 실제 값으로 채우기. 채우면 자동으로 댓글 위젯이 켜짐.
+
+const GISCUS_REPO = 'jgy4419/jgy4419.github.io';
+const GISCUS_REPO_ID = ''; // 예: R_kgDOxxxxxx
+const GISCUS_CATEGORY = 'General';
+const GISCUS_CATEGORY_ID = ''; // 예: DIC_kwDOxxxxxx
+
+const enabled = Boolean(GISCUS_REPO_ID && GISCUS_CATEGORY_ID);
 ---
 
 <section class="giscus-wrapper">
-	<script
-		src="https://giscus.app/client.js"
-		data-repo="YOUR_GH_USERNAME/YOUR_REPO"
-		data-repo-id="YOUR_REPO_ID"
-		data-category="General"
-		data-category-id="YOUR_CATEGORY_ID"
-		data-mapping="pathname"
-		data-strict="0"
-		data-reactions-enabled="1"
-		data-emit-metadata="0"
-		data-input-position="bottom"
-		data-theme="preferred_color_scheme"
-		data-lang="ko"
-		data-loading="lazy"
-		crossorigin="anonymous"
-		async></script>
+	{
+		enabled ? (
+			<script
+				src="https://giscus.app/client.js"
+				data-repo={GISCUS_REPO}
+				data-repo-id={GISCUS_REPO_ID}
+				data-category={GISCUS_CATEGORY}
+				data-category-id={GISCUS_CATEGORY_ID}
+				data-mapping="pathname"
+				data-strict="0"
+				data-reactions-enabled="1"
+				data-emit-metadata="0"
+				data-input-position="bottom"
+				data-theme="preferred_color_scheme"
+				data-lang="ko"
+				data-loading="lazy"
+				crossorigin="anonymous"
+				async
+			/>
+		) : (
+			<div class="placeholder">
+				<strong>댓글 기능 준비 중</strong>
+				<p>
+					giscus 설정이 아직 완료되지 않았습니다. 설정 완료되면 여기에 댓글 창이 나타나요.
+				</p>
+			</div>
+		)
+	}
 </section>
 
 <style>
@@ -28,5 +49,21 @@
 		margin-top: 4em;
 		padding-top: 2.5em;
 		border-top: 1px solid var(--border);
+	}
+	.placeholder {
+		padding: 1.25em 1.5em;
+		border: 1px dashed var(--border-strong);
+		border-radius: var(--radius-md);
+		color: var(--fg-muted);
+		background: var(--bg-muted);
+	}
+	.placeholder strong {
+		display: block;
+		color: var(--fg);
+		margin-bottom: 0.3em;
+	}
+	.placeholder p {
+		margin: 0;
+		font-size: 0.9em;
 	}
 </style>
