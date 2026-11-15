@@ -2,16 +2,10 @@ backend:
   name: github
   repo: jgy4419/jgy4419.github.io
   branch: main
-  # Sveltia CMS는 기본적으로 자체 OAuth 프록시를 제공합니다.
-  # 별도 서버 없이 "Sign in with GitHub" 버튼으로 로그인 가능.
-  # Personal Access Token으로 로그인하려면 로그인 화면에서 해당 옵션 선택.
 
-# CMS에서 업로드한 이미지가 저장되는 위치 (저장소 기준)
 media_folder: "public/uploads"
-# 글 markdown 안에 삽입될 때의 경로 (브라우저 기준 절대경로)
 public_folder: "/uploads"
 
-# 변경사항 저장 시 PR 대신 바로 main에 커밋
 publish_mode: simple
 
 site_url: https://jgy4419.github.io
@@ -30,28 +24,15 @@ collections:
     slug: "{{slug}}"
     extension: md
     format: frontmatter
-    summary: "{{title}} · {{pubDate}}"
+    summary: "{{title}}"
     sortable_fields: [pubDate, title]
     fields:
       - { label: 제목, name: title, widget: string }
-      - { label: 요약, name: description, widget: string, hint: 목록/메타태그에 쓰이는 짧은 소개 }
-      - label: 비공개
-        name: draft
-        widget: boolean
-        default: false
-        hint: "켜면 배포된 사이트에서 숨겨짐 (로컬 dev에서는 보임)"
+      - { label: 요약, name: description, widget: string }
+      - { label: 비공개, name: draft, widget: boolean, default: false }
       - { label: 작성일, name: pubDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { label: 수정일, name: updatedDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false }
-      - label: 카테고리
-        name: category
-        widget: string
-        default: 개발
-        hint: "자유롭게 입력 (예: 개발, 회고, 알고리즘, 프로젝트). 같은 이름을 쓰면 같은 카테고리로 묶임"
-      - label: 태그
-        name: tags
-        widget: list
-        required: false
-        default: []
-        hint: "자유롭게 입력 (예: astro, react, typescript)"
+      - { label: 카테고리, name: category, widget: string, default: 개발 }
+      - { label: 태그, name: tags, widget: list, required: false, default: [] }
       - { label: 대표 이미지, name: heroImage, widget: image, required: false }
       - { label: 본문, name: body, widget: markdown }
