@@ -7,8 +7,8 @@
 		<title>글 작성 · 제로의 블로그</title>
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<style>
-			/* "검증" 섹션 숨기기 — 로드 후 JS 가 찾아서 적용 */
-			[data-hide-validation] {
+			/* Sveltia 엔트리 에디터의 인스펙터(오른쪽 빈 사이드) 숨김 */
+			[data-hide-inspector] {
 				display: none !important;
 			}
 		</style>
@@ -17,39 +17,48 @@
 		<script type="module" src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
 
 		<script>
-			// Sveltia CMS 에디터 우측 패널에서 "검증 / Validation" 섹션만 선별 제거.
-			// MutationObserver로 에디터 열릴 때마다 자동 적용.
+			// 글 편집 화면에서 가장 오른쪽에 뜨는 인스펙터 사이드바(아이콘 탭 + 검증/히스토리/슬러그 패널)를
+			// 통째로 숨긴다. 미리보기는 유지.
+			//
+			// Sveltia CMS 소스상 .sidebar 클래스를 가진 요소인데, 앱 전역 네비도 .sidebar 를 쓸 수 있어서
+			// "사이드 패널 선택 버튼 그룹"을 품은 .sidebar 만 식별해 선별 제거.
 			(function () {
-				const VALIDATION_LABELS = ['검증', 'Validation', 'validation'];
+				const PANEL_LABEL_HINTS = [
+					'sidebar_panel', 'sidebar panel',
+					'사이드', '패널',
+					'검증', 'validation',
+					'슬러그', 'slug',
+					'히스토리', 'history',
+					'앵커', 'anchor',
+				];
 
-				function hideValidationSections(root) {
-					const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"]');
-					for (const h of headings) {
-						const text = (h.textContent || '').trim();
-						if (!VALIDATION_LABELS.includes(text)) continue;
-						// 가장 가까운 section/div 컨테이너를 숨김
-						const container =
-							h.closest('section, [class*="section"], [class*="panel"], [role="region"]') ||
-							h.parentElement;
-						if (container && !container.hasAttribute('data-hide-validation')) {
-							container.setAttribute('data-hide-validation', '');
+				function looksLikeEditorSidebar(el) {
+					const candidates = el.querySelectorAll('[aria-label], [aria-labelledby], button');
+					for (const c of candidates) {
+						const label = (c.getAttribute('aria-label') || c.textContent || '').toLowerCase();
+						if (PANEL_LABEL_HINTS.some((h) => label.includes(h.toLowerCase()))) return true;
+					}
+					return false;
+				}
+
+				function hideInspectorSidebars(root) {
+					const nodes = root.querySelectorAll
+						? root.querySelectorAll('.sidebar')
+						: [];
+					for (const el of nodes) {
+						if (el.hasAttribute('data-hide-inspector')) continue;
+						if (looksLikeEditorSidebar(el)) {
+							el.setAttribute('data-hide-inspector', '');
 						}
 					}
 				}
 
-				const observer = new MutationObserver((mutations) => {
-					for (const m of mutations) {
-						for (const node of m.addedNodes) {
-							if (node.nodeType === 1) hideValidationSections(node);
-						}
-					}
-					hideValidationSections(document.body);
+				const observer = new MutationObserver(() => {
+					hideInspectorSidebars(document.body);
 				});
-
 				observer.observe(document.body, { childList: true, subtree: true });
 
-				// 최초 1회 즉시 실행
-				window.addEventListener('load', () => hideValidationSections(document.body));
+				window.addEventListener('load', () => hideInspectorSidebars(document.body));
 			})();
 		</script>
 	</body>
