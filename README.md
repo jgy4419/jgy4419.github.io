@@ -12,7 +12,20 @@ npm run build      # 프로덕션 빌드 → ./dist
 npm run preview    # 빌드 결과 미리보기
 ```
 
-## 글 작성
+## 글 작성 — 두 가지 방법
+
+### A. 브라우저에서 바로 쓰기 (Sveltia CMS)
+
+1. 사이트의 `/admin/` 경로로 이동 (예: `https://jgy4419.github.io/admin/`)
+2. **"Sign in with GitHub"** 클릭 → GitHub 로그인
+3. "블로그 포스트" 컬렉션에서 **New** 버튼
+4. 제목/요약/날짜/본문 작성 후 **Publish**
+5. 자동으로 `src/content/blog/{slug}.md` 로 저장소에 커밋됨
+6. GitHub Actions가 자동 재배포 (1-2분)
+
+이미지는 에디터에서 드래그&드롭하면 `src/assets/uploads/` 로 저장됩니다.
+
+### B. 에디터에서 직접 쓰기
 
 `src/content/blog/` 안에 `.md` 또는 `.mdx` 파일을 만듭니다.
 
@@ -65,6 +78,16 @@ GitHub 링크의 `YOUR_USERNAME` 교체.
 ### 5. GitHub Pages 활성화
 
 저장소 Settings → **Pages** → Source를 **GitHub Actions**로 변경.
+
+### 6. Sveltia CMS 로그인 확인
+
+기본 설정은 Sveltia가 제공하는 OAuth 프록시를 사용합니다. 그냥
+`/admin/` 열고 "Sign in with GitHub" 하면 됩니다.
+
+만약 OAuth가 번거롭다면 로그인 화면에서 **Use Personal Access Token**
+선택 후, GitHub Settings → Developer settings → Personal access tokens
+(fine-grained)에서 해당 저장소의 **Contents: Read & Write** 권한
+토큰을 발급해 사용할 수 있습니다.
 
 ## 배포
 
