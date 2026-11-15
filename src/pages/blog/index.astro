@@ -1,145 +1,171 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
 import CategoryBadge from '../../components/CategoryBadge.astro';
-import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE_TITLE } from '../../consts';
+import { getPublishedPosts } from '../../utils/posts';
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getPublishedPosts()).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
-<!doctype html>
-<html lang="ko">
-	<head>
-		<BaseHead title={`Blog · ${SITE_TITLE}`} description="모든 포스트 목록" />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="page-head">
-				<h1>Blog</h1>
-				<p>지금까지 작성한 글 {posts.length}개</p>
-			</section>
+<BaseLayout title={`Blog · ${SITE_TITLE}`} description="모든 포스트 목록">
+	<section class="page-head">
+		<h1>Blog</h1>
+		<p>지금까지 작성한 글 {posts.length}개</p>
+	</section>
 
-			<ul class="post-list">
-				{
-					posts.map((post) => (
-						<li>
-							<a href={`/blog/${post.id}/`} class="row">
-								{post.data.heroImage && (
-									<div class="thumb">
-										<img src={post.data.heroImage} alt="" loading="lazy" />
+	<ul class="post-list" data-pagefind-ignore>
+		{
+			posts.map((post) => (
+				<li>
+					<a href={`/blog/${post.id}/`} class="row">
+						{post.data.heroImage && (
+							<div class="thumb">
+								<img src={post.data.heroImage} alt="" loading="lazy" />
+							</div>
+						)}
+						<div class="body">
+							<div class="badges">
+								<CategoryBadge category={post.data.category} asLink={false} />
+								{post.data.draft && <span class="draft">비공개</span>}
+							</div>
+							<h2>{post.data.title}</h2>
+							<p class="desc">{post.data.description}</p>
+							<div class="meta-row">
+								<time>
+									<FormattedDate date={post.data.pubDate} />
+								</time>
+								{post.data.tags.length > 0 && (
+									<div class="tags">
+										{post.data.tags.map((t) => (
+											<span class="tag">#{t}</span>
+										))}
 									</div>
 								)}
-								<div class="body">
-									<CategoryBadge category={post.data.category} asLink={false} />
-									<h2>{post.data.title}</h2>
-									<p class="desc">{post.data.description}</p>
-									<time>
-										<FormattedDate date={post.data.pubDate} />
-									</time>
-								</div>
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</main>
-		<Footer />
-		<style>
-			.page-head {
-				padding: 2em 0 2.5em;
-				border-bottom: 1px solid var(--border);
-				margin-bottom: 2em;
-			}
-			.page-head h1 {
-				margin: 0 0 0.25em;
-				font-size: 2.25em;
-				letter-spacing: -0.03em;
-			}
-			.page-head p {
-				margin: 0;
-				color: var(--fg-muted);
-			}
-			.post-list {
-				list-style: none;
-				padding: 0;
-				margin: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 1em;
-			}
-			.post-list li {
-				margin: 0;
-			}
-			.row {
-				display: grid;
-				grid-template-columns: 160px 1fr;
-				gap: 1.25em;
-				padding: 1em;
-				color: inherit;
-				text-decoration: none;
-				border-radius: var(--radius-lg);
-				border: 1px solid transparent;
-				transition: background 0.2s ease, border-color 0.2s ease;
-			}
-			.row:hover {
-				background: var(--bg-elevated);
-				border-color: var(--border);
-			}
-			.thumb {
-				aspect-ratio: 16 / 10;
-				overflow: hidden;
-				border-radius: var(--radius-md);
-			}
-			.thumb :global(img) {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				border-radius: 0;
-				display: block;
-			}
-			.body {
-				display: flex;
-				flex-direction: column;
-				align-items: flex-start;
-				gap: 0.4em;
-				min-width: 0;
-			}
-			.body h2 {
-				margin: 0;
-				font-size: 1.2em;
-				line-height: 1.4;
-			}
-			.desc {
-				margin: 0;
-				color: var(--fg-muted);
-				font-size: 0.95em;
-				display: -webkit-box;
-				-webkit-line-clamp: 2;
-				-webkit-box-orient: vertical;
-				line-clamp: 2;
-				overflow: hidden;
-			}
-			time {
-				margin-top: auto;
-				color: var(--fg-subtle);
-				font-size: 0.85em;
-			}
+							</div>
+						</div>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</BaseLayout>
 
-			@media (max-width: 640px) {
-				.row {
-					grid-template-columns: 1fr;
-					gap: 0.75em;
-				}
-				.thumb {
-					aspect-ratio: 16 / 9;
-				}
-			}
-		</style>
-	</body>
-</html>
+<style>
+	.page-head {
+		padding: 1.5em 0 2em;
+		border-bottom: 1px solid var(--border);
+		margin-bottom: 1.5em;
+	}
+	.page-head h1 {
+		margin: 0 0 0.25em;
+		font-size: 2em;
+		letter-spacing: -0.03em;
+	}
+	.page-head p {
+		margin: 0;
+		color: var(--fg-muted);
+	}
+	.post-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75em;
+	}
+	.row {
+		display: grid;
+		grid-template-columns: 160px 1fr;
+		gap: 1.25em;
+		padding: 1em;
+		color: inherit;
+		text-decoration: none;
+		border-radius: var(--radius-lg);
+		border: 1px solid transparent;
+		transition: background 0.2s ease, border-color 0.2s ease;
+	}
+	.row:hover {
+		background: var(--bg-elevated);
+		border-color: var(--border);
+	}
+	.thumb {
+		aspect-ratio: 16 / 10;
+		overflow: hidden;
+		border-radius: var(--radius-md);
+	}
+	.thumb img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.body {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.4em;
+		min-width: 0;
+	}
+	.body h2 {
+		margin: 0;
+		font-size: 1.15em;
+		line-height: 1.4;
+	}
+	.badges {
+		display: flex;
+		align-items: center;
+		gap: 0.4em;
+		flex-wrap: wrap;
+	}
+	.draft {
+		font-size: 0.72em;
+		font-weight: 600;
+		padding: 0.2em 0.6em;
+		border-radius: 999px;
+		background: #f59e0b22;
+		color: #d97706;
+		border: 1px solid #f59e0b55;
+	}
+	:global([data-theme='dark']) .draft,
+	:global(html:not([data-theme='light'])) .draft {
+		color: #fbbf24;
+	}
+	.desc {
+		margin: 0;
+		color: var(--fg-muted);
+		font-size: 0.93em;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		line-clamp: 2;
+		overflow: hidden;
+	}
+	.meta-row {
+		display: flex;
+		align-items: center;
+		gap: 0.75em;
+		flex-wrap: wrap;
+		margin-top: 0.3em;
+	}
+	time {
+		color: var(--fg-subtle);
+		font-size: 0.85em;
+	}
+	.tags {
+		display: flex;
+		gap: 0.4em;
+		flex-wrap: wrap;
+	}
+	.tag {
+		font-size: 0.78em;
+		color: var(--fg-muted);
+	}
+	@media (max-width: 640px) {
+		.row {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -1,0 +1,145 @@
+---
+import CategoryBadge from '../../components/CategoryBadge.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../../consts';
+import { getPublishedPosts } from '../../utils/posts';
+
+export async function getStaticPaths() {
+	const posts = await getPublishedPosts();
+	const byTag = new Map<string, typeof posts>();
+	for (const p of posts) {
+		for (const t of p.data.tags) {
+			if (!byTag.has(t)) byTag.set(t, []);
+			byTag.get(t)!.push(p);
+		}
+	}
+	return [...byTag.entries()].map(([tag, items]) => ({
+		params: { tag },
+		props: {
+			tag,
+			posts: items.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+		},
+	}));
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout
+	title={`#${tag} · ${SITE_TITLE}`}
+	description={`${tag} 태그의 글 모음`}
+>
+	<section class="page-head">
+		<a href="/tag/" class="back">← 전체 태그</a>
+		<h1>#{tag}</h1>
+		<p>글 {posts.length}개</p>
+	</section>
+	<ul class="post-list" data-pagefind-ignore>
+		{
+			posts.map((post) => (
+				<li>
+					<a href={`/blog/${post.id}/`} class="row">
+						{post.data.heroImage && (
+							<div class="thumb">
+								<img src={post.data.heroImage} alt="" loading="lazy" />
+							</div>
+						)}
+						<div class="body">
+							<CategoryBadge category={post.data.category} asLink={false} />
+							<h2>{post.data.title}</h2>
+							<p class="desc">{post.data.description}</p>
+							<time>
+								<FormattedDate date={post.data.pubDate} />
+							</time>
+						</div>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding: 1.5em 0 2em;
+		border-bottom: 1px solid var(--border);
+		margin-bottom: 1.5em;
+	}
+	.back {
+		display: inline-block;
+		color: var(--fg-muted);
+		font-size: 0.9em;
+		margin-bottom: 0.5em;
+	}
+	.back:hover {
+		color: var(--accent);
+	}
+	.page-head h1 {
+		margin: 0 0 0.25em;
+		font-size: 2em;
+	}
+	.page-head p {
+		margin: 0;
+		color: var(--fg-muted);
+	}
+	.post-list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75em;
+	}
+	.row {
+		display: grid;
+		grid-template-columns: 160px 1fr;
+		gap: 1.25em;
+		padding: 1em;
+		color: inherit;
+		text-decoration: none;
+		border-radius: var(--radius-lg);
+		border: 1px solid transparent;
+		transition: background 0.2s ease, border-color 0.2s ease;
+	}
+	.row:hover {
+		background: var(--bg-elevated);
+		border-color: var(--border);
+	}
+	.thumb {
+		aspect-ratio: 16 / 10;
+		overflow: hidden;
+		border-radius: var(--radius-md);
+	}
+	.thumb img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.body {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.4em;
+		min-width: 0;
+	}
+	.body h2 {
+		margin: 0;
+		font-size: 1.15em;
+	}
+	.desc {
+		margin: 0;
+		color: var(--fg-muted);
+		font-size: 0.93em;
+	}
+	time {
+		color: var(--fg-subtle);
+		font-size: 0.85em;
+	}
+	@media (max-width: 640px) {
+		.row {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

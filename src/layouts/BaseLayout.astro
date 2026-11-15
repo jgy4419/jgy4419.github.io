@@ -1,0 +1,159 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Sidebar from '../components/Sidebar.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+	title: string;
+	description: string;
+	image?: string;
+}
+const { title, description, image } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko">
+	<head>
+		<BaseHead title={title} description={description} image={image} />
+	</head>
+	<body>
+		<div class="layout">
+			<Sidebar />
+			<header class="mobile-bar">
+				<button class="menu-btn" aria-label="메뉴 열기" aria-expanded="false" id="menu-btn">
+					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+						<path
+							d="M4 6h16M4 12h16M4 18h16"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"></path>
+					</svg>
+				</button>
+				<a href="/" class="mobile-brand">{SITE_TITLE}</a>
+				<ThemeToggle />
+			</header>
+			<main class="content">
+				<slot />
+			</main>
+		</div>
+
+		<style is:global>
+			body {
+				margin: 0;
+			}
+			.layout {
+				display: grid;
+				grid-template-columns: 300px 1fr;
+				min-height: 100vh;
+			}
+			.layout > aside.sidebar {
+				position: sticky;
+				top: 0;
+				height: 100vh;
+				overflow-y: auto;
+			}
+			.layout > .content {
+				min-width: 0;
+				padding: 2em 2.5em 3em;
+			}
+			.mobile-bar {
+				display: none;
+			}
+			@media (max-width: 900px) {
+				.layout {
+					grid-template-columns: 1fr;
+				}
+				.layout > aside.sidebar {
+					position: fixed;
+					inset: 0 auto 0 0;
+					width: 280px;
+					max-width: 85vw;
+					height: 100vh;
+					transform: translateX(-100%);
+					transition: transform 0.25s ease;
+					z-index: 60;
+					box-shadow: var(--shadow-lg);
+				}
+				.layout > aside.sidebar.open {
+					transform: translateX(0);
+				}
+				.mobile-bar {
+					position: sticky;
+					top: 0;
+					z-index: 50;
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 1em;
+					padding: 0.7em 1em;
+					background: color-mix(in srgb, var(--bg) 85%, transparent);
+					backdrop-filter: saturate(180%) blur(12px);
+					-webkit-backdrop-filter: saturate(180%) blur(12px);
+					border-bottom: 1px solid var(--border);
+				}
+				.menu-btn {
+					width: 36px;
+					height: 36px;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					border-radius: var(--radius-sm);
+					border: 1px solid var(--border);
+					background: var(--bg-elevated);
+					color: var(--fg);
+					cursor: pointer;
+				}
+				.mobile-brand {
+					font-weight: 700;
+					color: var(--fg);
+					text-decoration: none;
+				}
+				.layout > .content {
+					padding: 1.5em 1em 3em;
+				}
+				.backdrop {
+					position: fixed;
+					inset: 0;
+					background: rgba(0, 0, 0, 0.4);
+					z-index: 55;
+					opacity: 0;
+					pointer-events: none;
+					transition: opacity 0.2s ease;
+				}
+				.backdrop.visible {
+					opacity: 1;
+					pointer-events: auto;
+				}
+			}
+			@media (min-width: 901px) {
+				.content {
+					max-width: 860px;
+				}
+			}
+		</style>
+
+		<div class="backdrop" id="sidebar-backdrop"></div>
+
+		<script is:inline>
+			document.addEventListener('DOMContentLoaded', () => {
+				const btn = document.getElementById('menu-btn');
+				const sidebar = document.getElementById('sidebar');
+				const backdrop = document.getElementById('sidebar-backdrop');
+				if (!btn || !sidebar || !backdrop) return;
+				const close = () => {
+					sidebar.classList.remove('open');
+					backdrop.classList.remove('visible');
+					btn.setAttribute('aria-expanded', 'false');
+				};
+				btn.addEventListener('click', () => {
+					const open = sidebar.classList.toggle('open');
+					backdrop.classList.toggle('visible', open);
+					btn.setAttribute('aria-expanded', String(open));
+				});
+				backdrop.addEventListener('click', close);
+				sidebar.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+			});
+		</script>
+	</body>
+</html>

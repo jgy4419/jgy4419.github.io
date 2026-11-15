@@ -1,0 +1,219 @@
+---
+// Pagefind 검색 UI. 빌드 후 /pagefind/pagefind.js 가 자동 생성됨.
+// 데이터 속성 data-pagefind-body 가 붙은 영역만 인덱싱됨.
+---
+
+<div class="search">
+	<label class="search-label">
+		<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none">
+			<circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"></circle>
+			<path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+		</svg>
+		<input
+			type="search"
+			id="pf-search"
+			placeholder="검색… (Ctrl+K)"
+			autocomplete="off"
+			spellcheck="false"
+		/>
+		<kbd class="kbd">⌘K</kbd>
+	</label>
+	<div id="pf-results" class="results" hidden></div>
+</div>
+
+<style>
+	.search {
+		position: relative;
+		width: 100%;
+	}
+	.search-label {
+		display: flex;
+		align-items: center;
+		gap: 0.6em;
+		padding: 0.5em 0.85em;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-md);
+		background: var(--bg-elevated);
+		color: var(--fg-muted);
+		cursor: text;
+		transition: border-color 0.15s ease, box-shadow 0.15s ease;
+	}
+	.search-label:focus-within {
+		border-color: var(--accent);
+		box-shadow: 0 0 0 3px var(--accent-soft);
+	}
+	.search-label input {
+		flex: 1;
+		min-width: 0;
+		border: none;
+		outline: none;
+		background: transparent;
+		color: var(--fg);
+		font-family: inherit;
+		font-size: 0.95em;
+	}
+	.search-label input::placeholder {
+		color: var(--fg-subtle);
+	}
+	.kbd {
+		font-family: var(--font-mono);
+		font-size: 0.75em;
+		padding: 0.15em 0.4em;
+		border: 1px solid var(--border);
+		border-radius: 4px;
+		color: var(--fg-subtle);
+		background: var(--bg);
+	}
+	.results {
+		position: absolute;
+		top: calc(100% + 0.5em);
+		left: 0;
+		right: 0;
+		max-height: 70vh;
+		overflow-y: auto;
+		background: var(--bg-elevated);
+		border: 1px solid var(--border);
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-lg);
+		z-index: 100;
+		padding: 0.5em;
+	}
+	.results:empty {
+		display: none;
+	}
+	.results :global(.pf-result) {
+		display: block;
+		padding: 0.7em 0.9em;
+		border-radius: var(--radius-sm);
+		color: inherit;
+		text-decoration: none;
+		transition: background 0.1s ease;
+	}
+	.results :global(.pf-result:hover),
+	.results :global(.pf-result.active) {
+		background: var(--bg-muted);
+	}
+	.results :global(.pf-title) {
+		font-weight: 600;
+		color: var(--fg);
+		margin-bottom: 0.2em;
+	}
+	.results :global(.pf-excerpt) {
+		font-size: 0.88em;
+		color: var(--fg-muted);
+		line-height: 1.5;
+	}
+	.results :global(mark) {
+		background: var(--accent-soft);
+		color: var(--accent);
+		padding: 0 2px;
+		border-radius: 3px;
+	}
+	.results :global(.pf-empty) {
+		padding: 1em;
+		color: var(--fg-subtle);
+		text-align: center;
+		font-size: 0.9em;
+	}
+</style>
+
+<script>
+	type Sub = { url: string; excerpt: string; meta?: { title?: string } };
+	type Result = { id: string; data: () => Promise<Sub> };
+	type Pagefind = { debouncedSearch: (q: string) => Promise<{ results: Result[] } | null> };
+
+	let pagefind: Pagefind | null = null;
+	let activeIdx = -1;
+	let currentItems: HTMLElement[] = [];
+
+	async function loadPagefind(): Promise<Pagefind> {
+		if (pagefind) return pagefind;
+		// 빌드 후 /pagefind/pagefind.js 가 자동 생성됨. 번들러가 해석 못 하게 @vite-ignore.
+		try {
+			pagefind = /* @vite-ignore */ await import(
+				/* @vite-ignore */ `${window.location.origin}/pagefind/pagefind.js`
+			);
+			return pagefind!;
+		} catch (err) {
+			throw new Error('검색 인덱스를 아직 사용할 수 없어요. 프로덕션 빌드 필요.');
+		}
+	}
+
+	const input = document.getElementById('pf-search') as HTMLInputElement | null;
+	const results = document.getElementById('pf-results') as HTMLDivElement | null;
+
+	if (input && results) {
+		input.addEventListener('input', async () => {
+			const q = input.value.trim();
+			if (!q) {
+				results.hidden = true;
+				results.innerHTML = '';
+				return;
+			}
+			try {
+				const pf = await loadPagefind();
+				const search = await pf.debouncedSearch(q);
+				if (!search) return;
+				const items = await Promise.all(search.results.slice(0, 8).map((r) => r.data()));
+				if (items.length === 0) {
+					results.innerHTML = '<div class="pf-empty">검색 결과 없음</div>';
+				} else {
+					results.innerHTML = items
+						.map(
+							(it) => `
+								<a class="pf-result" href="${it.url}">
+									<div class="pf-title">${it.meta?.title ?? it.url}</div>
+									<div class="pf-excerpt">${it.excerpt}</div>
+								</a>
+							`,
+						)
+						.join('');
+				}
+				currentItems = Array.from(results.querySelectorAll('.pf-result'));
+				activeIdx = -1;
+				results.hidden = false;
+			} catch (err) {
+				results.innerHTML = `<div class="pf-empty">${(err as Error).message}</div>`;
+				results.hidden = false;
+			}
+		});
+
+		input.addEventListener('keydown', (e) => {
+			if (e.key === 'ArrowDown') {
+				e.preventDefault();
+				activeIdx = Math.min(activeIdx + 1, currentItems.length - 1);
+				updateActive();
+			} else if (e.key === 'ArrowUp') {
+				e.preventDefault();
+				activeIdx = Math.max(activeIdx - 1, 0);
+				updateActive();
+			} else if (e.key === 'Enter' && activeIdx >= 0) {
+				e.preventDefault();
+				(currentItems[activeIdx] as HTMLAnchorElement)?.click();
+			} else if (e.key === 'Escape') {
+				results.hidden = true;
+				input.blur();
+			}
+		});
+
+		function updateActive() {
+			currentItems.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+			currentItems[activeIdx]?.scrollIntoView({ block: 'nearest' });
+		}
+
+		document.addEventListener('click', (e) => {
+			if (!results.contains(e.target as Node) && e.target !== input) {
+				results.hidden = true;
+			}
+		});
+
+		// ⌘K / Ctrl+K 로 포커스
+		document.addEventListener('keydown', (e) => {
+			if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+				e.preventDefault();
+				input.focus();
+				input.select();
+			}
+		});
+	}
+</script>

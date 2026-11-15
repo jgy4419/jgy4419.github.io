@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../../consts';
+import { getPublishedPosts } from '../../utils/posts';
+
+const posts = await getPublishedPosts();
+const counts = new Map<string, number>();
+for (const p of posts) {
+	for (const t of p.data.tags) {
+		counts.set(t, (counts.get(t) ?? 0) + 1);
+	}
+}
+const entries = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+const max = entries[0]?.[1] ?? 1;
+---
+
+<BaseLayout title={`태그 · ${SITE_TITLE}`} description="태그별 글 모음">
+	<section class="page-head">
+		<h1>태그</h1>
+		<p>태그 {entries.length}개</p>
+	</section>
+	{
+		entries.length === 0 ? (
+			<p class="empty">아직 태그가 없어요.</p>
+		) : (
+			<div class="cloud" data-pagefind-ignore>
+				{entries.map(([tag, n]) => (
+					<a
+						href={`/tag/${encodeURIComponent(tag)}/`}
+						class="chip"
+						style={`--scale: ${0.85 + (n / max) * 0.6}`}
+					>
+						#{tag}
+						<span class="count">{n}</span>
+					</a>
+				))}
+			</div>
+		)
+	}
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding: 1.5em 0 2em;
+		border-bottom: 1px solid var(--border);
+		margin-bottom: 1.5em;
+	}
+	.page-head h1 {
+		margin: 0 0 0.25em;
+		font-size: 2em;
+		letter-spacing: -0.03em;
+	}
+	.page-head p {
+		margin: 0;
+		color: var(--fg-muted);
+	}
+	.cloud {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6em;
+	}
+	.chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4em;
+		padding: 0.4em 0.9em;
+		border-radius: 999px;
+		background: var(--bg-elevated);
+		border: 1px solid var(--border);
+		color: var(--fg);
+		text-decoration: none;
+		font-size: calc(0.9em * var(--scale, 1));
+		font-weight: 500;
+		transition: all 0.15s ease;
+	}
+	.chip:hover {
+		color: var(--accent);
+		border-color: var(--accent);
+		transform: translateY(-2px);
+	}
+	.count {
+		color: var(--fg-subtle);
+		font-size: 0.85em;
+	}
+	.empty {
+		color: var(--fg-muted);
+	}
+</style>

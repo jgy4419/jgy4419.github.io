@@ -1,11 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import Header from '../../components/Header.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import { CATEGORIES, SITE_TITLE } from '../../consts';
+import { getPublishedPosts } from '../../utils/posts';
 
-const posts = await getCollection('blog');
+const posts = await getPublishedPosts();
 
 const counts = new Map<string, number>();
 for (const c of CATEGORIES) counts.set(c, 0);
@@ -16,83 +14,70 @@ for (const p of posts) {
 const entries = [...counts.entries()].filter(([, n]) => n > 0);
 ---
 
-<!doctype html>
-<html lang="ko">
-	<head>
-		<BaseHead title={`카테고리 · ${SITE_TITLE}`} description="카테고리별 글 모음" />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="page-head">
-				<h1>카테고리</h1>
-				<p>주제별로 글을 모아봤어요.</p>
-			</section>
-			<ul class="list">
-				{
-					entries.map(([cat, n]) => (
-						<li>
-							<a href={`/category/${encodeURIComponent(cat)}/`} class="card">
-								<span class="name">{cat}</span>
-								<span class="count">{n}</span>
-							</a>
-						</li>
-					))
-				}
-			</ul>
-		</main>
-		<Footer />
-		<style>
-			.page-head {
-				padding: 2em 0 2.5em;
-				border-bottom: 1px solid var(--border);
-				margin-bottom: 2em;
-			}
-			.page-head h1 {
-				margin: 0 0 0.25em;
-				font-size: 2.25em;
-				letter-spacing: -0.03em;
-			}
-			.page-head p {
-				margin: 0;
-				color: var(--fg-muted);
-			}
-			.list {
-				list-style: none;
-				padding: 0;
-				margin: 0;
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-				gap: 1em;
-			}
-			.list li {
-				margin: 0;
-			}
-			.card {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				padding: 1.1em 1.25em;
-				border-radius: var(--radius-lg);
-				border: 1px solid var(--border);
-				background: var(--bg-elevated);
-				color: var(--fg);
-				text-decoration: none;
-				transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-			}
-			.card:hover {
-				transform: translateY(-2px);
-				border-color: var(--accent);
-				color: var(--accent);
-			}
-			.name {
-				font-weight: 600;
-			}
-			.count {
-				color: var(--fg-subtle);
-				font-size: 0.9em;
-				font-variant-numeric: tabular-nums;
-			}
-		</style>
-	</body>
-</html>
+<BaseLayout title={`카테고리 · ${SITE_TITLE}`} description="카테고리별 글 모음">
+	<section class="page-head">
+		<h1>카테고리</h1>
+		<p>주제별로 모아 본 글</p>
+	</section>
+	<ul class="list" data-pagefind-ignore>
+		{
+			entries.map(([cat, n]) => (
+				<li>
+					<a href={`/category/${encodeURIComponent(cat)}/`} class="card">
+						<span class="name">{cat}</span>
+						<span class="count">{n}</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding: 1.5em 0 2em;
+		border-bottom: 1px solid var(--border);
+		margin-bottom: 1.5em;
+	}
+	.page-head h1 {
+		margin: 0 0 0.25em;
+		font-size: 2em;
+		letter-spacing: -0.03em;
+	}
+	.page-head p {
+		margin: 0;
+		color: var(--fg-muted);
+	}
+	.list {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+		gap: 1em;
+	}
+	.card {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1.1em 1.25em;
+		border-radius: var(--radius-lg);
+		border: 1px solid var(--border);
+		background: var(--bg-elevated);
+		color: var(--fg);
+		text-decoration: none;
+		transition: transform 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+	}
+	.card:hover {
+		transform: translateY(-2px);
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+	.name {
+		font-weight: 600;
+	}
+	.count {
+		color: var(--fg-subtle);
+		font-size: 0.9em;
+	}
+</style>
