@@ -7,7 +7,7 @@ import ThemeToggle from './ThemeToggle.astro';
 
 <aside class="sidebar" id="sidebar">
 	<a href="/" class="profile">
-		<div class="avatar">0</div>
+		<img class="avatar" src="/avatar.png" alt={AUTHOR_NAME} width="96" height="96" />
 		<div class="name">{AUTHOR_NAME}</div>
 		<div class="tagline">{SITE_DESCRIPTION}</div>
 	</a>
@@ -82,15 +82,10 @@ import ThemeToggle from './ThemeToggle.astro';
 		width: 96px;
 		height: 96px;
 		border-radius: 50%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: var(--gradient);
-		color: #fff;
-		font-weight: 800;
-		font-size: 2.6em;
-		font-family: var(--font-mono);
+		object-fit: cover;
+		background: var(--bg-muted);
 		box-shadow: var(--shadow-md);
+		border: 2px solid var(--bg-elevated);
 	}
 	.name {
 		font-size: 1.3em;
