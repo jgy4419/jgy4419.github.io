@@ -44,9 +44,9 @@ collections:
       - { label: 수정일, name: updatedDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false }
       - label: 카테고리
         name: category
-        widget: select
+        widget: string
         default: 개발
-        options: [개발, 회고, 알고리즘, 프로젝트, 일상, 기타]
+        hint: "자유롭게 입력 (예: 개발, 회고, 알고리즘, 프로젝트). 같은 이름을 쓰면 같은 카테고리로 묶임"
       - label: 태그
         name: tags
         widget: list

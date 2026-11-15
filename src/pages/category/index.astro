@@ -1,36 +1,39 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { CATEGORIES, SITE_TITLE } from '../../consts';
+import { SITE_TITLE } from '../../consts';
 import { getPublishedPosts } from '../../utils/posts';
 
 const posts = await getPublishedPosts();
 
 const counts = new Map<string, number>();
-for (const c of CATEGORIES) counts.set(c, 0);
 for (const p of posts) {
 	const c = p.data.category;
 	counts.set(c, (counts.get(c) ?? 0) + 1);
 }
-const entries = [...counts.entries()].filter(([, n]) => n > 0);
+const entries = [...counts.entries()].sort((a, b) => b[1] - a[1]);
 ---
 
 <BaseLayout title={`카테고리 · ${SITE_TITLE}`} description="카테고리별 글 모음">
 	<section class="page-head">
 		<h1>카테고리</h1>
-		<p>주제별로 모아 본 글</p>
+		<p>주제별로 모아 본 글 · {entries.length}개 카테고리</p>
 	</section>
-	<ul class="list" data-pagefind-ignore>
-		{
-			entries.map(([cat, n]) => (
-				<li>
-					<a href={`/category/${encodeURIComponent(cat)}/`} class="card">
-						<span class="name">{cat}</span>
-						<span class="count">{n}</span>
-					</a>
-				</li>
-			))
-		}
-	</ul>
+	{
+		entries.length === 0 ? (
+			<p class="empty">아직 글이 없어요.</p>
+		) : (
+			<ul class="list" data-pagefind-ignore>
+				{entries.map(([cat, n]) => (
+					<li>
+						<a href={`/category/${encodeURIComponent(cat)}/`} class="card">
+							<span class="name">{cat}</span>
+							<span class="count">{n}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		)
+	}
 </BaseLayout>
 
 <style>
@@ -79,5 +82,8 @@ const entries = [...counts.entries()].filter(([, n]) => n > 0);
 	.count {
 		color: var(--fg-subtle);
 		font-size: 0.9em;
+	}
+	.empty {
+		color: var(--fg-muted);
 	}
 </style>
