@@ -1,10 +1,15 @@
 ---
 title: '첫 포스트: 블로그 시작하기'
-description: 'Astro + GitHub Pages 조합으로 개발 블로그를 시작합니다.'
-pubDate: '2026-11-15'
-heroImage: '/uploads/blog-placeholder-3.jpg'
-category: '일상'
-tags: ['astro', 'blog', 'github-pages']
+description: Astro + GitHub Pages 조합으로 개발 블로그를 시작합니다.
+draft: true
+pubDate: 2026-11-15
+updatedDate: ''
+category: 일상
+tags:
+  - astro
+  - blog
+  - github-pages
+heroImage: /uploads/blog-placeholder-3.jpg
 ---
 
 개발하면서 배운 것들을 기록하기 위해 블로그를 만들었습니다.
