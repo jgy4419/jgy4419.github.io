@@ -1,0 +1,32 @@
+---
+// giscus 댓글 위젯.
+// https://giscus.app 에서 발급한 값들을 아래에 채워 넣으세요.
+// data-repo, data-repo-id, data-category, data-category-id 는 반드시 실제 값으로 교체되어야 합니다.
+---
+
+<section class="giscus-wrapper">
+	<script
+		src="https://giscus.app/client.js"
+		data-repo="YOUR_GH_USERNAME/YOUR_REPO"
+		data-repo-id="YOUR_REPO_ID"
+		data-category="General"
+		data-category-id="YOUR_CATEGORY_ID"
+		data-mapping="pathname"
+		data-strict="0"
+		data-reactions-enabled="1"
+		data-emit-metadata="0"
+		data-input-position="bottom"
+		data-theme="preferred_color_scheme"
+		data-lang="ko"
+		data-loading="lazy"
+		crossorigin="anonymous"
+		async></script>
+</section>
+
+<style>
+	.giscus-wrapper {
+		margin-top: 4em;
+		padding-top: 2.5em;
+		border-top: 1px solid var(--border);
+	}
+</style>

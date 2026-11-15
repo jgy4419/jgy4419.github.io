@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="About"
+	description="블로그 소개"
+	pubDate={new Date()}
+>
+	<p>
+		개발하면서 배운 것들을 기록하는 공간입니다. 작성한 글들은
+		이 저장소의 <code>src/content/blog/</code>에 Markdown으로 저장됩니다.
+	</p>
+
+	<p>
+		연락이나 피드백은 각 포스트 하단의 댓글(giscus)로 남겨주세요.
+	</p>
+</Layout>
