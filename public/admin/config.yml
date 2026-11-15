@@ -26,6 +26,8 @@ collections:
     format: frontmatter
     summary: "{{title}}"
     sortable_fields: [pubDate, title]
+    editor:
+      preview: false
     fields:
       - { label: 제목, name: title, widget: string }
       - { label: 요약, name: description, widget: string }
