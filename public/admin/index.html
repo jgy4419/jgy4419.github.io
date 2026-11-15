@@ -6,13 +6,51 @@
 		<meta name="robots" content="noindex" />
 		<title>글 작성 · 제로의 블로그</title>
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<style>
+			/* "검증" 섹션 숨기기 — 로드 후 JS 가 찾아서 적용 */
+			[data-hide-validation] {
+				display: none !important;
+			}
+		</style>
 	</head>
 	<body>
-		<!--
-			Sveltia CMS. 기본적으로 /admin 아래에서 로드됩니다.
-			로그인 후 "블로그 포스트" 컬렉션에서 새 글을 작성 → Publish 하면
-			src/content/blog/{slug}.md 로 저장소에 커밋되고, 자동으로 사이트가 재배포됩니다.
-		-->
 		<script type="module" src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+
+		<script>
+			// Sveltia CMS 에디터 우측 패널에서 "검증 / Validation" 섹션만 선별 제거.
+			// MutationObserver로 에디터 열릴 때마다 자동 적용.
+			(function () {
+				const VALIDATION_LABELS = ['검증', 'Validation', 'validation'];
+
+				function hideValidationSections(root) {
+					const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6, [role="heading"]');
+					for (const h of headings) {
+						const text = (h.textContent || '').trim();
+						if (!VALIDATION_LABELS.includes(text)) continue;
+						// 가장 가까운 section/div 컨테이너를 숨김
+						const container =
+							h.closest('section, [class*="section"], [class*="panel"], [role="region"]') ||
+							h.parentElement;
+						if (container && !container.hasAttribute('data-hide-validation')) {
+							container.setAttribute('data-hide-validation', '');
+						}
+					}
+				}
+
+				const observer = new MutationObserver((mutations) => {
+					for (const m of mutations) {
+						for (const node of m.addedNodes) {
+							if (node.nodeType === 1) hideValidationSections(node);
+						}
+					}
+					hideValidationSections(document.body);
+				});
+
+				observer.observe(document.body, { childList: true, subtree: true });
+
+				// 최초 1회 즉시 실행
+				window.addEventListener('load', () => hideValidationSections(document.body));
+			})();
+		</script>
 	</body>
 </html>
