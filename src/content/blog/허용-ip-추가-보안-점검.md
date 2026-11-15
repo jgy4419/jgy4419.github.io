@@ -1,7 +1,7 @@
 ---
 title: 허용 IP 추가, 보안 점검
 description: 리눅스 기반 gpu 서버 보안 정리
-draft: true
+draft: false
 pubDate: 2026-11-15
 updatedDate: ''
 category: 리눅스
