@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
@@ -41,7 +41,7 @@ const latest = posts.slice(0, 6);
 								<a href={`/blog/${post.id}/`} class="card">
 									{post.data.heroImage && (
 										<div class="thumb">
-											<Image width={720} height={360} src={post.data.heroImage} alt="" />
+											<img src={post.data.heroImage} alt="" loading="lazy" />
 										</div>
 									)}
 									<div class="meta">
@@ -146,6 +146,7 @@ const latest = posts.slice(0, 6);
 				padding: 1.1em 1.25em 1.3em;
 				display: flex;
 				flex-direction: column;
+				align-items: flex-start;
 				gap: 0.5em;
 				flex: 1;
 			}

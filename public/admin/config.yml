@@ -4,16 +4,14 @@ backend:
   branch: main
   # Sveltia CMS는 기본적으로 자체 OAuth 프록시를 제공합니다.
   # 별도 서버 없이 "Sign in with GitHub" 버튼으로 로그인 가능.
-  # Personal Access Token으로 로그인하고 싶다면 로그인 화면에서 "Use Personal Access Token" 선택.
+  # Personal Access Token으로 로그인하려면 로그인 화면에서 해당 옵션 선택.
 
 # CMS에서 업로드한 이미지가 저장되는 위치 (저장소 기준)
-media_folder: "src/assets/uploads"
+media_folder: "public/uploads"
+# 글 markdown 안에 삽입될 때의 경로 (브라우저 기준 절대경로)
+public_folder: "/uploads"
 
-# 글(markdown) 안에 삽입될 때의 경로.
-# 글 파일(src/content/blog/*.md)에서 media_folder까지의 상대경로.
-public_folder: "../../assets/uploads"
-
-# 에디터에서 변경사항 저장 시 PR 대신 바로 main에 커밋
+# 변경사항 저장 시 PR 대신 바로 main에 커밋
 publish_mode: simple
 
 site_url: https://jgy4419.github.io
@@ -34,14 +32,15 @@ collections:
     format: frontmatter
     summary: "{{title}} · {{pubDate}}"
     sortable_fields: [pubDate, title]
-    view_filters:
-      - label: 최근 1년
-        field: pubDate
-        pattern: "2026"
     fields:
       - { label: 제목, name: title, widget: string }
       - { label: 요약, name: description, widget: string, hint: 목록/메타태그에 쓰이는 짧은 소개 }
       - { label: 작성일, name: pubDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { label: 수정일, name: updatedDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false }
-      - { label: 대표 이미지, name: heroImage, widget: image, required: false, allow_multiple: false }
+      - label: 카테고리
+        name: category
+        widget: select
+        default: 개발
+        options: [개발, 회고, 알고리즘, 프로젝트, 일상, 기타]
+      - { label: 대표 이미지, name: heroImage, widget: image, required: false }
       - { label: 본문, name: body, widget: markdown }

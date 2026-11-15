@@ -1,7 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Giscus from '../components/Giscus.astro';
@@ -9,7 +9,7 @@ import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, category } = Astro.props;
 ---
 
 <html lang="ko">
@@ -21,16 +21,19 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<main>
 			<article>
 				<header class="title">
-					<time>
-						<FormattedDate date={pubDate} />
-						{
-							updatedDate && (
-								<span class="updated">
-									· 업데이트 <FormattedDate date={updatedDate} />
-								</span>
-							)
-						}
-					</time>
+					<div class="meta-row">
+						<CategoryBadge category={category} size="md" />
+						<time>
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<span class="updated">
+										· 업데이트 <FormattedDate date={updatedDate} />
+									</span>
+								)
+							}
+						</time>
+					</div>
 					<h1>{title}</h1>
 					{description && <p class="description">{description}</p>}
 				</header>
@@ -38,7 +41,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				{
 					heroImage && (
 						<div class="hero-image">
-							<Image width={1200} height={600} src={heroImage} alt="" />
+							<img src={heroImage} alt="" />
 						</div>
 					)
 				}
@@ -63,11 +66,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				padding: 1em 0 2em;
 				text-align: left;
 			}
+			.meta-row {
+				display: flex;
+				align-items: center;
+				gap: 0.75em;
+				flex-wrap: wrap;
+				margin-bottom: 0.75em;
+			}
 			.title time {
-				display: block;
 				color: var(--fg-subtle);
 				font-size: 0.9em;
-				margin-bottom: 0.75em;
 			}
 			.updated {
 				font-style: italic;
