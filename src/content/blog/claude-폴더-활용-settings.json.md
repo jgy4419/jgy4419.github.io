@@ -1,7 +1,7 @@
 ---
 title: .claude 폴더 활용 - settings.json
 description: .claude 폴더 하위에 settings.json 내용 정리
-draft: true
+draft: false
 pubDate: 2026-11-16
 updatedDate: 2026-11-17
 category: CLAUDE
