@@ -67,6 +67,11 @@ allowed-tools: Bash(yarn:*)
 
 > 특정 이벤트에 Bash 스크립트 자동 실행.
 
+**Hook이랑 Skill 차이**
+
+- Hooks : Claude Code 프로그램이 정해진 이벤트에서 무조건 실행
+- Skills : Claude 가 상황 보고 판단해서 호출.
+
 **파일 위치** : `.claude/settings.json` 의 `hooks` 섹션
 
 **ex. 파일 저장 후 자동 lint**
