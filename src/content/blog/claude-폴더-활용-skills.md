@@ -1,6 +1,6 @@
 ---
-title: .claude 폴더 활용 - skills
-description: claude code에 skill 을 직접 만들어보기
+title: .claude 폴더 활용 - skills, hooks, agents
+description: claude code에 skill, hook, agent 을 직접 만들어보기
 draft: false
 pubDate: 2026-11-17
 updatedDate: ''
