@@ -1,7 +1,7 @@
 ---
 title: 리눅스 로그 확인 방법 (journalctl 사용법 정리)
 description: 리눅스 journal 설정부터 분석까지
-draft: false
+draft: true
 pubDate: 2026-11-18
 updatedDate: ''
 category: 리눅스
