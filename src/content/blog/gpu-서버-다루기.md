@@ -2,7 +2,7 @@
 title: GPU 서버 다루기 (리눅스 서비스 관리 기초)
 description: 리눅스 서버가 어떻게 동작하고 프로그램이 실행되는지 이해하기
 draft: false
-pubDate: 2026-11-17
+pubDate: 2026-11-18
 updatedDate: ''
 category: 리눅스
 tags:
