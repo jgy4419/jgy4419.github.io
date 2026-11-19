@@ -11,19 +11,6 @@ tags:
 heroImage: ''
 ---
 
----
-title: .claude 폴더 활용 - settings.json
-description: .claude 폴더 하위에 settings.json 내용 정리
-draft: false
-pubDate: 2026-11-16
-updatedDate: ''
-category: CLAUDE
-tags:
-  - claude
-  - AI
-heroImage: ''
----
-
 > 참조 : [https://daleseo.com/claude-code-settings/](https://daleseo.com/claude-code-settings/)
 
 ### 1. 위치와 범위
