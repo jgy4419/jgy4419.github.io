@@ -92,8 +92,7 @@ const { category, posts } = Astro.props;
 		gap: 0.75em;
 	}
 	.row {
-		display: grid;
-		grid-template-columns: 160px 1fr;
+		display: flex;
 		gap: 1.25em;
 		padding: 1em;
 		color: inherit;
@@ -107,6 +106,7 @@ const { category, posts } = Astro.props;
 		border-color: var(--border);
 	}
 	.thumb {
+		flex: 0 0 160px;
 		aspect-ratio: 16 / 10;
 		overflow: hidden;
 		border-radius: var(--radius-md);
@@ -119,6 +119,7 @@ const { category, posts } = Astro.props;
 	}
 	.body {
 		display: flex;
+		flex: 1;
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 0.4em;
@@ -139,7 +140,12 @@ const { category, posts } = Astro.props;
 	}
 	@media (max-width: 640px) {
 		.row {
-			grid-template-columns: 1fr;
+			flex-direction: column;
+		}
+		.thumb {
+			flex: 0 0 auto;
+			width: 100%;
+			aspect-ratio: 16 / 9;
 		}
 	}
 </style>

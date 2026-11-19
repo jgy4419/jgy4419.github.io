@@ -6,6 +6,17 @@ backend:
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
+media_libraries:
+  default:
+    config:
+      max_file_size: 5242880 # 5 MiB
+      transformations:
+        raster_image:
+          format: webp
+          quality: 85
+          max_width: 2048
+          max_height: 2048
+
 publish_mode: simple
 
 site_url: https://jgy4419.github.io

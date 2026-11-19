@@ -4,7 +4,8 @@
 import '../styles/global.css';
 import { SITE_TITLE } from '../consts';
 
-const FALLBACK_IMAGE = '/uploads/blog-placeholder-1.jpg';
+// SNS 공유 시 기본 썸네일. 포스트에 heroImage 가 있으면 그게 우선됨.
+const FALLBACK_IMAGE = '/avatar.png';
 
 interface Props {
 	title: string;
@@ -60,4 +61,7 @@ const { title, description, image = FALLBACK_IMAGE } = Astro.props;
 <meta property="og:image" content={new URL(image, Astro.url)} />
 
 <!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
