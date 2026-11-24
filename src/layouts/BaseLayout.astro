@@ -8,8 +8,9 @@ interface Props {
 	title: string;
 	description: string;
 	image?: string;
+	wide?: boolean;
 }
-const { title, description, image } = Astro.props;
+const { title, description, image, wide = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -33,7 +34,7 @@ const { title, description, image } = Astro.props;
 				<a href="/" class="mobile-brand">{SITE_TITLE}</a>
 				<ThemeToggle />
 			</header>
-			<main class="content">
+			<main class:list={['content', { wide }]}>
 				<slot />
 			</main>
 		</div>
@@ -129,6 +130,9 @@ const { title, description, image } = Astro.props;
 			@media (min-width: 901px) {
 				.content {
 					max-width: 860px;
+				}
+				.content.wide {
+					max-width: none;
 				}
 			}
 		</style>
