@@ -1,21 +1,48 @@
 ---
-import { type CollectionEntry, render } from 'astro:content';
+import { render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
-import { getPublishedPosts } from '../../utils/posts';
+import {
+	findAdjacent,
+	findRelated,
+	getPublishedPosts,
+	getSortedPublished,
+	readingTimeMin,
+	type Post,
+} from '../../utils/posts';
 
 export async function getStaticPaths() {
 	const posts = await getPublishedPosts();
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
+	const sorted = [...posts].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	return posts.map((post) => {
+		const { prev, next } = findAdjacent(sorted, post.id);
+		const related = findRelated(sorted, post);
+		const reading = readingTimeMin(post.body);
+		return {
+			params: { slug: post.id },
+			props: { post, prev, next, related, reading },
+		};
+	});
 }
-type Props = CollectionEntry<'blog'>;
 
-const post = Astro.props;
-const { Content } = await render(post);
+interface Props {
+	post: Post;
+	prev?: Post;
+	next?: Post;
+	related: Post[];
+	reading: number;
+}
+
+const { post, prev, next, related, reading } = Astro.props;
+const { Content, headings } = await render(post);
 ---
 
-<BlogPost {...post.data}>
+<BlogPost
+	{...post.data}
+	headings={headings}
+	prev={prev}
+	next={next}
+	related={related}
+	reading={reading}
+>
 	<Content />
 </BlogPost>

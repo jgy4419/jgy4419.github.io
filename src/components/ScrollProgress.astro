@@ -1,0 +1,41 @@
+---
+// 스크롤 진행률 상단 바 (포스트 페이지 전용)
+---
+
+<div class="scroll-progress" aria-hidden="true">
+	<div class="bar" id="scroll-progress-bar"></div>
+</div>
+
+<style>
+	.scroll-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		z-index: 70;
+		pointer-events: none;
+	}
+	.bar {
+		height: 100%;
+		width: 0;
+		background: var(--gradient);
+		transition: width 0.08s ease-out;
+	}
+</style>
+
+<script is:inline>
+	(function () {
+		function update() {
+			const el = document.getElementById('scroll-progress-bar');
+			if (!el) return;
+			const h = document.documentElement;
+			const max = h.scrollHeight - h.clientHeight;
+			const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+			el.style.width = pct + '%';
+		}
+		window.addEventListener('scroll', update, { passive: true });
+		window.addEventListener('resize', update);
+		update();
+	})();
+</script>

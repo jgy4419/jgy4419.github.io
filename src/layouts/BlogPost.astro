@@ -1,66 +1,125 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import CategoryBadge from '../components/CategoryBadge.astro';
+import CopyCodeButton from '../components/CopyCodeButton.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Giscus from '../components/Giscus.astro';
+import PostNav from '../components/PostNav.astro';
+import ReadingTime from '../components/ReadingTime.astro';
+import RelatedPosts from '../components/RelatedPosts.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import Toc from '../components/Toc.astro';
+import type { Post } from '../utils/posts';
 import BaseLayout from './BaseLayout.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Frontmatter = CollectionEntry<'blog'>['data'];
+interface Heading {
+	depth: number;
+	slug: string;
+	text: string;
+}
+interface Props extends Frontmatter {
+	headings: Heading[];
+	prev?: Post;
+	next?: Post;
+	related: Post[];
+	reading: number;
+}
 
-const { title, description, pubDate, updatedDate, heroImage, category, tags, draft } = Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	category,
+	tags,
+	draft,
+	headings,
+	prev,
+	next,
+	related,
+	reading,
+} = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}>
-	<article data-pagefind-body>
-		<header class="title">
-			<div class="meta-row">
-				<CategoryBadge category={category} size="md" />
-				{draft && <span class="draft">비공개 (dev 미리보기)</span>}
-				<time>
-					<FormattedDate date={pubDate} />
-					{
-						updatedDate && (
-							<span class="updated">
-								· 업데이트 <FormattedDate date={updatedDate} />
-							</span>
-						)
-					}
-				</time>
-			</div>
-			<h1>{title}</h1>
-			{description && <p class="description">{description}</p>}
+	<ScrollProgress />
+	<div class="post-layout">
+		<article data-pagefind-body>
+			<header class="title">
+				<div class="meta-row">
+					<CategoryBadge category={category} size="md" />
+					{draft && <span class="draft">비공개 (dev 미리보기)</span>}
+					<time>
+						<FormattedDate date={pubDate} />
+						{
+							updatedDate && (
+								<span class="updated">
+									· 업데이트 <FormattedDate date={updatedDate} />
+								</span>
+							)
+						}
+					</time>
+					<span class="dot" aria-hidden="true">·</span>
+					<ReadingTime minutes={reading} />
+				</div>
+				<h1>{title}</h1>
+				{description && <p class="description">{description}</p>}
+				{
+					tags.length > 0 && (
+						<div class="tags">
+							{tags.map((t) => (
+								<a href={`/tag/${encodeURIComponent(t)}/`} class="tag">
+									#{t}
+								</a>
+							))}
+						</div>
+					)
+				}
+			</header>
+
 			{
-				tags.length > 0 && (
-					<div class="tags">
-						{tags.map((t) => (
-							<a href={`/tag/${encodeURIComponent(t)}/`} class="tag">
-								#{t}
-							</a>
-						))}
+				heroImage && (
+					<div class="hero-image">
+						<img src={heroImage} alt="" />
 					</div>
 				)
 			}
-		</header>
 
-		{
-			heroImage && (
-				<div class="hero-image">
-					<img src={heroImage} alt="" />
-				</div>
-			)
-		}
+			<div class="prose">
+				<slot />
+			</div>
 
-		<div class="prose">
-			<slot />
-		</div>
+			<PostNav prev={prev} next={next} />
+			<RelatedPosts posts={related} />
+			<Giscus />
+		</article>
 
-		<Giscus />
-	</article>
+		<Toc headings={headings} />
+	</div>
+
+	<CopyCodeButton />
 
 	<style>
-		article {
-			max-width: 760px;
+		.post-layout {
+			display: grid;
+			grid-template-columns: minmax(0, 760px) 240px;
+			gap: 2.5em;
+			max-width: 1060px;
 			margin: 0 auto;
+		}
+		@media (max-width: 1100px) {
+			.post-layout {
+				grid-template-columns: minmax(0, 1fr);
+				max-width: 760px;
+			}
+			.post-layout :global(.toc) {
+				display: none;
+			}
+		}
+		article {
+			min-width: 0;
 		}
 		.title {
 			padding: 1em 0 2em;
@@ -68,9 +127,12 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags, dra
 		.meta-row {
 			display: flex;
 			align-items: center;
-			gap: 0.75em;
+			gap: 0.6em;
 			flex-wrap: wrap;
 			margin-bottom: 0.75em;
+		}
+		.dot {
+			color: var(--fg-subtle);
 		}
 		.title time {
 			color: var(--fg-subtle);
@@ -140,10 +202,12 @@ const { title, description, pubDate, updatedDate, heroImage, category, tags, dra
 		.prose :global(h2) {
 			margin-top: 2em;
 			font-size: 1.6em;
+			scroll-margin-top: 1em;
 		}
 		.prose :global(h3) {
 			margin-top: 1.5em;
 			font-size: 1.25em;
+			scroll-margin-top: 1em;
 		}
 		.prose :global(p) {
 			margin-bottom: 1.4em;

@@ -1,9 +1,10 @@
 ---
 import CategoryBadge from '../../components/CategoryBadge.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
+import ReadingTime from '../../components/ReadingTime.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE_TITLE } from '../../consts';
-import { getPublishedPosts } from '../../utils/posts';
+import { getPublishedPosts, readingTimeMin } from '../../utils/posts';
 
 export async function getStaticPaths() {
 	const posts = await getPublishedPosts();
@@ -48,9 +49,13 @@ const { category, posts } = Astro.props;
 							<CategoryBadge category={post.data.category} asLink={false} />
 							<h2>{post.data.title}</h2>
 							<p class="desc">{post.data.description}</p>
-							<time>
-								<FormattedDate date={post.data.pubDate} />
-							</time>
+							<div class="meta">
+								<time>
+									<FormattedDate date={post.data.pubDate} />
+								</time>
+								<span aria-hidden="true">·</span>
+								<ReadingTime minutes={readingTimeMin(post.body)} />
+							</div>
 						</div>
 					</a>
 				</li>
@@ -134,9 +139,15 @@ const { category, posts } = Astro.props;
 		color: var(--fg-muted);
 		font-size: 0.93em;
 	}
-	time {
+	.meta {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
 		color: var(--fg-subtle);
 		font-size: 0.85em;
+	}
+	time {
+		color: var(--fg-subtle);
 	}
 	@media (max-width: 640px) {
 		.row {

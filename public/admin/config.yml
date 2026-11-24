@@ -43,7 +43,26 @@ collections:
       - { label: 비공개, name: draft, widget: boolean, default: false }
       - { label: 작성일, name: pubDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false }
       - { label: 수정일, name: updatedDate, widget: datetime, date_format: "YYYY-MM-DD", time_format: false, picker_utc: false, required: false }
-      - { label: 카테고리, name: category, widget: string, default: 개발 }
-      - { label: 태그, name: tags, widget: list, required: false, default: [] }
+      # 카테고리: 기존 포스트들의 category 값에서 자동완성
+      - label: 카테고리
+        name: category
+        widget: relation
+        collection: blog
+        value_field: category
+        search_fields: [category]
+        display_fields: [category]
+        multiple: false
+        default: 개발
+      # 태그: 기존 포스트들의 tags.* 에서 자동완성 (복수 선택)
+      - label: 태그
+        name: tags
+        widget: relation
+        collection: blog
+        value_field: "tags.*"
+        search_fields: ["tags.*"]
+        display_fields: ["tags.*"]
+        multiple: true
+        required: false
+        default: []
       - { label: 대표 이미지, name: heroImage, widget: image, required: false }
       - { label: 본문, name: body, widget: markdown }

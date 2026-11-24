@@ -1,9 +1,10 @@
 ---
 import CategoryBadge from '../components/CategoryBadge.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import ReadingTime from '../components/ReadingTime.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { AUTHOR_NAME, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { getPublishedPosts } from '../utils/posts';
+import { getPublishedPosts, readingTimeMin } from '../utils/posts';
 
 const posts = (await getPublishedPosts()).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -36,9 +37,13 @@ const latest = posts.slice(0, 8);
 								<CategoryBadge category={post.data.category} asLink={false} />
 								<h3>{post.data.title}</h3>
 								<p class="desc">{post.data.description}</p>
-								<time>
-									<FormattedDate date={post.data.pubDate} />
-								</time>
+								<div class="meta">
+									<time>
+										<FormattedDate date={post.data.pubDate} />
+									</time>
+									<span aria-hidden="true">·</span>
+									<ReadingTime minutes={readingTimeMin(post.body)} />
+								</div>
 							</div>
 						</a>
 					</li>
@@ -144,9 +149,15 @@ const latest = posts.slice(0, 8);
 		line-clamp: 2;
 		overflow: hidden;
 	}
-	time {
+	.meta {
 		margin-top: auto;
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
 		color: var(--fg-subtle);
 		font-size: 0.85em;
+	}
+	time {
+		color: var(--fg-subtle);
 	}
 </style>

@@ -1,9 +1,10 @@
 ---
 import CategoryBadge from '../../components/CategoryBadge.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
+import ReadingTime from '../../components/ReadingTime.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { SITE_TITLE } from '../../consts';
-import { getPublishedPosts } from '../../utils/posts';
+import { getPublishedPosts, readingTimeMin } from '../../utils/posts';
 
 const posts = (await getPublishedPosts()).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
@@ -37,6 +38,8 @@ const posts = (await getPublishedPosts()).sort(
 								<time>
 									<FormattedDate date={post.data.pubDate} />
 								</time>
+								<span aria-hidden="true">·</span>
+								<ReadingTime minutes={readingTimeMin(post.body)} />
 								{post.data.tags.length > 0 && (
 									<div class="tags">
 										{post.data.tags.map((t) => (

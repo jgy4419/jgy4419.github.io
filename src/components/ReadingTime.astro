@@ -1,0 +1,29 @@
+---
+interface Props {
+	minutes: number;
+	class?: string;
+}
+const { minutes, class: className } = Astro.props;
+---
+
+<span class:list={['reading-time', className]} aria-label={`약 ${minutes}분 읽기`}>
+	<svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none">
+		<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle>
+		<path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+	</svg>
+	{minutes}분
+</span>
+
+<style>
+	.reading-time {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3em;
+		color: var(--fg-subtle);
+		font-size: 0.85em;
+		font-variant-numeric: tabular-nums;
+	}
+	.reading-time svg {
+		opacity: 0.7;
+	}
+</style>

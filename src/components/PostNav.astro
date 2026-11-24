@@ -1,0 +1,75 @@
+---
+import type { Post } from '../utils/posts';
+
+interface Props {
+	prev?: Post;
+	next?: Post;
+}
+const { prev, next } = Astro.props;
+---
+
+{
+	(prev || next) && (
+		<nav class="post-nav" aria-label="이전/다음 글">
+			{prev ? (
+				<a href={`/blog/${prev.id}/`} class="card prev">
+					<span class="label">← 이전 글</span>
+					<span class="title">{prev.data.title}</span>
+				</a>
+			) : (
+				<span />
+			)}
+			{next ? (
+				<a href={`/blog/${next.id}/`} class="card next">
+					<span class="label">다음 글 →</span>
+					<span class="title">{next.data.title}</span>
+				</a>
+			) : (
+				<span />
+			)}
+		</nav>
+	)
+}
+
+<style>
+	.post-nav {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1em;
+		margin-top: 3em;
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3em;
+		padding: 1em 1.2em;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-md);
+		background: var(--bg-elevated);
+		color: var(--fg);
+		text-decoration: none;
+		transition: border-color 0.15s ease, transform 0.15s ease;
+	}
+	.card:hover {
+		border-color: var(--accent);
+		transform: translateY(-2px);
+	}
+	.card.next {
+		text-align: right;
+		align-items: flex-end;
+	}
+	.label {
+		font-size: 0.8em;
+		color: var(--fg-muted);
+		font-weight: 600;
+	}
+	.title {
+		font-weight: 600;
+		line-height: 1.4;
+	}
+	@media (max-width: 640px) {
+		.post-nav {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
